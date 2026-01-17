@@ -1,0 +1,28 @@
+# Project Tasks
+
+- [x] **Project Setup**
+    - [x] Laravel 12.x Installation
+    - [x] Database Configuration (MySQL)
+    - [x] Validated Environment
+- [x] **Authentication & Roles**
+    - [x] User Model & Migrations
+    - [x] RBAC Implementation (Super Admin, Manager, Customer)
+    - [x] Custom Login Page (AdminLTE v4)
+    - [x] Password Reset Flow
+- [x] **Admin Panel Core**
+    - [x] AdminLTE v4 Integration (Bootstrap 5)
+    - [x] Dashboard Widget Implementation
+    - [x] Sidebar & Navigation
+- [x] **Catalog Management**
+    - [x] Category Module (CRUD, Images, Sub-categories)
+    - [x] Product Module (CRUD, Images, SKU, Pricing, Filters)
+- [ ] **Business Logic**
+    - [ ] Order Management
+    - [ ] Customer Management
+- [ ] **Settings & System**
+    - [ ] General Site Settings
+    - [ ] Banner Management
+- [ ] **Frontend**
+    - [ ] Theme Engine Integration
+    - [ ] Homepage & Product Listing
+    - [ ] Cart & Checkout
