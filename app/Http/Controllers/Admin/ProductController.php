@@ -63,12 +63,16 @@ class ProductController extends Controller
             'manage_stock' => 'boolean',
             'meta_title' => 'nullable|string|max:60',
             'meta_description' => 'nullable|string|max:160',
+            'material' => 'nullable|string|max:100',
+            'purity' => 'nullable|string|max:100',
+            'weight' => 'nullable|numeric|min:0',
         ]);
 
         $data = $request->except(['image', 'categories', 'variants', 'gallery_images']);
         $data['slug'] = Str::slug($request->name) . '-' . Str::random(4);
         $data['is_active'] = $request->has('is_active');
         $data['manage_stock'] = $request->has('manage_stock');
+        $data['is_trending'] = $request->has('is_trending');
         
         $product = Product::create($data);
 
@@ -125,6 +129,9 @@ class ProductController extends Controller
             'manage_stock' => 'boolean',
             'meta_title' => 'nullable|string|max:60',
             'meta_description' => 'nullable|string|max:160',
+            'material' => 'nullable|string|max:100',
+            'purity' => 'nullable|string|max:100',
+            'weight' => 'nullable|numeric|min:0',
         ]);
 
         $data = $request->except(['image', 'categories', 'variants']);

@@ -99,6 +99,12 @@
                                 <p>Testimonials</p>
                             </a>
                         </li>
+                        <li class="nav-item">
+                            <a href="{{ route('admin.banners.index') }}" class="nav-link {{ request()->routeIs('admin.banners.*') ? 'active' : '' }}">
+                                <i class="nav-icon bi bi-images"></i>
+                                <p>Homepage Banners</p>
+                            </a>
+                        </li>
 
                         @canany(['customers.view', 'orders.view'])
                         <li class="nav-header">SHOP MANAGEMENT</li>

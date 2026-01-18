@@ -21,6 +21,8 @@ Route::group(['middleware' => ['web', 'auth']], function () {
     Route::resource('products', ProductController::class);
     Route::resource('categories', \App\Http\Controllers\Admin\CategoryController::class);
     Route::resource('testimonials', \App\Http\Controllers\Admin\TestimonialController::class);
+    Route::resource('banners', \App\Http\Controllers\Admin\BannerController::class);
+    Route::post('banners/{banner}/toggle-active', [\App\Http\Controllers\Admin\BannerController::class, 'toggleActive'])->name('banners.toggle-active');
 
     // Settings Routes
     // Settings Routes

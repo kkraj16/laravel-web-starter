@@ -43,6 +43,36 @@
                                         <label class="form-label">Full Description</label>
                                         <textarea name="description" class="form-control" rows="5"></textarea>
                                     </div>
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <div class="mb-3">
+                                                <label class="form-label">Material</label>
+                                                <select name="material" class="form-select">
+                                                    <option value="">Select Material</option>
+                                                    @foreach(\App\Enums\ProductMaterial::cases() as $material)
+                                                        <option value="{{ $material->value }}">{{ $material->value }}</option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="mb-3">
+                                                <label class="form-label">Purity</label>
+                                                <select name="purity" class="form-select">
+                                                    <option value="">Select Purity</option>
+                                                    @foreach(\App\Enums\ProductPurity::cases() as $purity)
+                                                        <option value="{{ $purity->value }}">{{ $purity->value }}</option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="mb-3">
+                                                <label class="form-label">Weight (g)</label>
+                                                <input type="number" name="weight" class="form-control" step="0.01" placeholder="0.00">
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                                 <div class="col-md-4">
                                      <div class="mb-3">
@@ -53,33 +83,95 @@
                                         </select>
                                     </div>
                                     <div class="mb-3">
-                                        <label class="form-label">Status</label>
-                                        <div class="form-check form-switch">
+                                        <label class="form-label">Status & Visibility</label>
+                                        <div class="form-check form-switch mb-2">
                                             <input class="form-check-input" type="checkbox" role="switch" id="isActive" name="is_active" checked>
                                             <label class="form-check-label" for="isActive">Active / Published</label>
+                                        </div>
+                                        <div class="form-check form-switch mb-2">
+                                            <input class="form-check-input" type="checkbox" role="switch" id="isTrending" name="is_trending">
+                                            <label class="form-check-label" for="isTrending">Mark as Trending</label>
                                         </div>
                                     </div>
                                     <div class="mb-3">
                                         <label class="form-label">Categories</label>
-                                        <div class="card p-2" style="max-height: 200px; overflow-y: auto;">
+                                        <select name="categories[]" class="form-select" multiple size="5">
                                             @foreach($categories as $cat)
-                                                <div class="form-check">
-                                                    <input class="form-check-input" type="checkbox" name="categories[]" value="{{ $cat->id }}" id="cat{{ $cat->id }}">
-                                                    <label class="form-check-label" for="cat{{ $cat->id }}">{{ $cat->name }}</label>
-                                                </div>
+                                                <option value="{{ $cat->id }}">{{ $cat->name }}</option>
                                                 @foreach($cat->children as $child)
-                                                     <div class="form-check ms-3">
-                                                        <input class="form-check-input" type="checkbox" name="categories[]" value="{{ $child->id }}" id="cat{{ $child->id }}">
-                                                        <label class="form-check-label" for="cat{{ $child->id }}">-- {{ $child->name }}</label>
-                                                    </div>
+                                                    <option value="{{ $child->id }}">-- {{ $child->name }}</option>
                                                 @endforeach
                                             @endforeach
-                                        </div>
+                                        </select>
+                                        <small class="text-muted">Hold Cmd/Ctrl to select multiple</small>
                                     </div>
                                      <div class="mb-3">
                                         <label class="form-label">Thumbnail</label>
-                                        <input type="file" name="image" class="form-control">
+                                        <div class="image-upload-zone p-4 border border-2 border-dashed rounded text-center position-relative" id="dropZone">
+                                            <div class="default-view" id="defaultView">
+                                                <i class="bi bi-cloud-arrow-up fs-1 text-secondary"></i>
+                                                <p class="mb-1">Drag & drop image here or click to upload</p>
+                                                <input type="file" name="image" class="form-control position-absolute top-0 start-0 w-100 h-100 opacity-0" id="imageInput" accept="image/*" style="cursor: pointer;">
+                                            </div>
+                                            <div class="preview-view d-none" id="previewView">
+                                                <img src="" id="imagePreview" class="img-fluid rounded border mb-2" style="max-height: 200px;">
+                                                <br>
+                                                <button type="button" class="btn btn-sm btn-danger" id="removeImageBtn">
+                                                    <i class="bi bi-trash"></i> Remove
+                                                </button>
+                                            </div>
+                                        </div>
                                     </div>
+
+                                    <script>
+                                        document.addEventListener('DOMContentLoaded', function() {
+                                            const dropZone = document.getElementById('dropZone');
+                                            const imageInput = document.getElementById('imageInput');
+                                            const defaultView = document.getElementById('defaultView');
+                                            const previewView = document.getElementById('previewView');
+                                            const imagePreview = document.getElementById('imagePreview');
+                                            const removeImageBtn = document.getElementById('removeImageBtn');
+
+                                            // Handle file selection
+                                            imageInput.addEventListener('change', function(e) {
+                                                const file = this.files[0];
+                                                if(file) {
+                                                    const reader = new FileReader();
+                                                    reader.onload = function(e) {
+                                                        imagePreview.src = e.target.result;
+                                                        defaultView.classList.add('d-none');
+                                                        previewView.classList.remove('d-none');
+                                                    }
+                                                    reader.readAsDataURL(file);
+                                                }
+                                            });
+
+                                            // Highlight drop zone
+                                            dropZone.addEventListener('dragover', (e) => {
+                                                e.preventDefault();
+                                                dropZone.classList.add('bg-light');
+                                            });
+                                            
+                                            dropZone.addEventListener('dragleave', (e) => {
+                                                dropZone.classList.remove('bg-light');
+                                            });
+                                            
+                                            dropZone.addEventListener('drop', (e) => {
+                                                e.preventDefault();
+                                                dropZone.classList.remove('bg-light');
+                                                // File input handles drop automatically if overlaying, but we can manually assign if needed.
+                                                // Since input covers the div, it should catch the drop event naturally.
+                                            });
+
+                                            // Remove image
+                                            removeImageBtn.addEventListener('click', function() {
+                                                imageInput.value = '';
+                                                defaultView.classList.remove('d-none');
+                                                previewView.classList.add('d-none');
+                                                imagePreview.src = '';
+                                            });
+                                        });
+                                    </script>
                                 </div>
                             </div>
                         </div>

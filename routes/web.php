@@ -16,5 +16,28 @@ Route::post('password/reset', [App\Http\Controllers\Auth\ResetPasswordController
 
 // Frontend
 Route::get('/', function () {
-    return view('theme::home');
+    $products = \App\Models\Product::with('categories')
+                ->where('is_active', true)
+                ->where('is_trending', true)
+                ->latest()
+                ->take(8)
+                ->get();
+
+    $banners = \App\Models\Banner::where('is_active', true)
+                ->orderBy('order', 'asc')
+                ->orderBy('created_at', 'desc')
+                ->get();
+
+    $testimonials = \App\Models\Testimonial::where('is_active', true)
+                    ->latest()
+                    ->take(10)
+                    ->get();
+    
+    return view('theme::home', compact('products', 'testimonials', 'banners'));
 })->name('home');
+
+Route::get('/collections', [\App\Http\Controllers\Frontend\ProductController::class, 'index'])->name('products.index');
+Route::get('/product/{slug}', [\App\Http\Controllers\Frontend\ProductController::class, 'show'])->name('products.show');
+
+Route::get('/about', [\App\Http\Controllers\Frontend\PageController::class, 'about'])->name('about');
+Route::get('/contact', [\App\Http\Controllers\Frontend\PageController::class, 'contact'])->name('contact');

@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Str;
 
 class Product extends Model
 {
@@ -31,7 +32,11 @@ class Product extends Model
         'gallery',
         'meta_title',
         'meta_description',
-        'meta_keywords'
+        'meta_keywords',
+        'material',
+        'purity',
+        'weight',
+        'is_trending'
     ];
 
     protected $casts = [
@@ -40,6 +45,9 @@ class Product extends Model
         'gallery' => 'array',
         'sale_start' => 'datetime',
         'sale_end' => 'datetime',
+        'is_trending' => 'boolean',
+        'material' => \App\Enums\ProductMaterial::class,
+        'purity' => \App\Enums\ProductPurity::class,
     ];
 
     public function categories()
@@ -59,8 +67,15 @@ class Product extends Model
 
     public function getPrimaryImageAttribute()
     {
-        // Return thumbnail if set, else first image from relation
-        return $this->thumbnail ? asset('storage/'.$this->thumbnail) : 
-                ($this->images->where('is_primary', true)->first() ? asset('storage/'.$this->images->where('is_primary', true)->first()->image_path) : asset('images/placeholder.png'));
+        $path = $this->thumbnail;
+        
+        if(!$path) {
+            $primary = $this->images->where('is_primary', true)->first();
+            $path = $primary ? $primary->image_path : null;
+        }
+
+        if(!$path) return asset('images/placeholder.png');
+
+        return Str::startsWith($path, 'http') ? $path : asset('storage/' . $path);
     }
 }
