@@ -86,8 +86,12 @@ class ProductController extends Controller
         
         $minPrice = Product::min('price') ?? 0;
         $maxPrice = Product::max('price') ?? 10000;
+        
+        // Get distinct materials and purities for filter buttons
+        $materials = Product::distinct()->pluck('material')->filter()->values();
+        $purities = Product::distinct()->pluck('purity')->filter()->values();
 
-        return view('themes.default.products.index', compact('products', 'categories', 'minPrice', 'maxPrice'));
+        return view('themes.default.products.index', compact('products', 'categories', 'minPrice', 'maxPrice', 'materials', 'purities'));
     }
     public function show($slug)
     {
