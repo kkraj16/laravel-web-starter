@@ -1,16 +1,143 @@
-<div class="bg-black text-white text-[10px] py-2 tracking-widest uppercase border-b border-gray-800">
-    <div class="container mx-auto px-6 flex justify-between items-center">
-        <div class="flex items-center space-x-6 overflow-hidden">
-            <span class="text-primary font-bold flex items-center">
-                <span class="w-1.5 h-1.5 bg-green-500 rounded-full mr-2 animate-pulse"></span>
-                Live Market
-            </span>
-            <span>Gold 24k <span class="text-primary ml-1">₹76,500</span></span>
-            <span>Gold 22k <span class="text-primary ml-1">₹71,200</span></span>
-            <span>Silver <span class="text-primary ml-1">₹92,500</span></span>
-        </div>
-        <div class="hidden md:block text-gray-400">
-            <i class="bi bi-clock me-1"></i> Updated 09:55 AM
-        </div>
+<style>
+    @keyframes ticker {
+        0% {
+            transform: translate(100%);
+        }
+        100% {
+            transform: translate(-100%);
+        }
+    }
+
+    .ticker-container {
+        position: relative;
+        height: 2.5rem;
+        background-color: #000000;
+        border-bottom: 1px solid rgb(31 41 55);
+        overflow: hidden;
+    }
+
+    .ticker-badge {
+        position: absolute;
+        left: 0;
+        top: 0;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        padding-left: 1.5rem;
+        padding-right: 3rem;
+        background: linear-gradient(to right, #000000 70%, transparent);
+        z-index: 10;
+    }
+
+    .ticker-content {
+        display: flex;
+        align-items: center;
+        height: 100%;
+        white-space: nowrap;
+        animation: ticker 30s linear infinite;
+        gap: 3rem;
+        padding: 0 3rem;
+    }
+
+    .ticker-item {
+        font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+        font-size: 0.625rem;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        color: #ffffff;
+        text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+    }
+
+    .ticker-label {
+        color: rgb(220 220 220);
+        font-weight: 500;
+        text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+    }
+
+    .ticker-value {
+        color: rgb(250 204 21);
+        font-weight: 800;
+        font-size: 0.75rem;
+        text-shadow: 0 0 20px rgba(250, 204, 21, 0.6), 0 2px 4px rgba(0, 0, 0, 0.9);
+    }
+
+    .ticker-separator {
+        color: rgb(200 155 60);
+        font-size: 0.75rem;
+        opacity: 0.6;
+    }
+</style>
+
+<div class="ticker-container">
+    <!-- Fixed Live Market Badge -->
+    <div class="ticker-badge">
+        <span class="text-primary font-bold flex items-center text-[10px] uppercase tracking-widest">
+            <span class="w-1.5 h-1.5 bg-green-500 rounded-full mr-2 animate-pulse shadow-lg shadow-green-500/50"></span>
+            Live Market
+        </span>
+    </div>
+
+    <!-- Scrolling Ticker Content -->
+    <div class="ticker-content">
+        <!-- First Set -->
+        <span class="ticker-item">
+            <span class="ticker-label">Gold 24K</span>
+            <span class="ticker-value">₹76,500</span>
+        </span>
+        <span class="ticker-separator">|</span>
+
+        <span class="ticker-item">
+            <span class="ticker-label">Gold 22K</span>
+            <span class="ticker-value">₹71,200</span>
+        </span>
+        <span class="ticker-separator">|</span>
+
+        <span class="ticker-item">
+            <span class="ticker-label">Silver</span>
+            <span class="ticker-value">₹92,500</span>
+        </span>
+        <span class="ticker-separator">|</span>
+
+        <span class="ticker-item" style="color: rgb(250 204 21); font-weight: 600; text-shadow: 0 0 12px rgba(250, 204, 21, 0.4);">
+            ✨ New Collection Launch - Exclusive Traditional Designs
+        </span>
+        <span class="ticker-separator">|</span>
+
+        <span class="ticker-item" style="color: rgb(96 165 250); font-weight: 600; text-shadow: 0 0 12px rgba(96, 165, 250, 0.4);">
+            💍 100% Certified Hallmarked Jewellery
+        </span>
+        <span class="ticker-separator">|</span>
+
+        <!-- Duplicate for seamless loop -->
+        <span class="ticker-item">
+            <span class="ticker-label">Gold 24K</span>
+            <span class="ticker-value">₹76,500</span>
+        </span>
+        <span class="ticker-separator">|</span>
+
+        <span class="ticker-item">
+            <span class="ticker-label">Gold 22K</span>
+            <span class="ticker-value">₹71,200</span>
+        </span>
+        <span class="ticker-separator">|</span>
+
+        <span class="ticker-item">
+            <span class="ticker-label">Silver</span>
+            <span class="ticker-value">₹92,500</span>
+        </span>
+        <span class="ticker-separator">|</span>
+
+        <span class="ticker-item" style="color: rgb(250 204 21); font-weight: 600; text-shadow: 0 0 12px rgba(250, 204, 21, 0.4);">
+            ✨ New Collection Launch - Exclusive Traditional Designs
+        </span>
+        <span class="ticker-separator">|</span>
+
+        <span class="ticker-item" style="color: rgb(96 165 250); font-weight: 600; text-shadow: 0 0 12px rgba(96, 165, 250, 0.4);">
+            💍 100% Certified Hallmarked Jewellery
+        </span>
+        <span class="ticker-separator">|</span>
     </div>
 </div>
