@@ -35,29 +35,40 @@
                         </div>
                     @endif
 
-                    @if($product->is_new)
+
+                    @if($product->created_at->diffInDays(now()) < 30)
                         <span class="absolute top-2 left-2 bg-black text-white text-[10px] uppercase font-bold tracking-widest px-2 py-1">New</span>
                     @endif
 
-                    @if(!$product->in_stock)
+                    @if($product->stock_status == 'outofstock' || $product->stock_quantity <= 0)
                         <div class="absolute inset-0 bg-white/60 flex items-center justify-center">
-                            <span class="bg-white px-3 py-1 text-xs uppercase tracking-widest font-bold border border-black">Out of Stock</span>
+                            <span class="bg-red-500 text-white px-3 py-1 text-xs uppercase tracking-widest font-bold shadow-md">Out of Stock</span>
                         </div>
                     @endif
 
                     <div class="absolute bottom-4 left-0 right-0 px-4 translate-y-full opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300">
-                        <button 
-                            class="w-full bg-white text-black text-xs font-bold uppercase py-3 shadow-lg hover:bg-black hover:text-white transition-colors flex items-center justify-center gap-2"
-                            data-product-inquiry
-                            data-product-name="{{ $product->name }}"
-                            data-product-sku="{{ $product->sku ?? 'N/A' }}"
-                            data-product-price="₹{{ number_format($product->price, 0) }}"
-                            data-product-url="{{ route('products.show', $product->slug) }}"
-                            data-whatsapp-number="{{ \App\Models\Setting::get('contact_whatsapp') ?? '919928154903' }}"
-                        >
-                            <i class="bi bi-whatsapp text-green-500"></i> Inquire Now
-                        </button>
+                        @if($product->stock_status == 'outofstock' || $product->stock_quantity <= 0)
+                            <button 
+                                class="w-full bg-gray-300 text-gray-500 text-xs font-bold uppercase py-3 shadow-lg cursor-not-allowed flex items-center justify-center gap-2"
+                                disabled
+                            >
+                                <i class="bi bi-x-circle"></i> Currently Unavailable
+                            </button>
+                        @else
+                            <button 
+                                class="w-full bg-white text-black text-xs font-bold uppercase py-3 shadow-lg hover:bg-black hover:text-white transition-colors flex items-center justify-center gap-2"
+                                data-product-inquiry
+                                data-product-name="{{ $product->name }}"
+                                data-product-sku="{{ $product->sku ?? 'N/A' }}"
+                                data-product-price="₹{{ number_format($product->price, 0) }}"
+                                data-product-url="{{ route('products.show', $product->slug) }}"
+                                data-whatsapp-number="{{ \App\Models\Setting::get('contact_whatsapp') ?? '919928154903' }}"
+                            >
+                                <i class="bi bi-whatsapp text-green-500"></i> Inquire Now
+                            </button>
+                        @endif
                     </div>
+
                 </div>
 
                 <div class="text-center">

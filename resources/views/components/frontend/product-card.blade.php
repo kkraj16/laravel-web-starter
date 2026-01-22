@@ -34,7 +34,11 @@
 
         <!-- Badges -->
         <div class="absolute top-3 left-3 flex flex-col space-y-2 pointer-events-none">
-            @if($isNew)
+            @if($product && ($product->stock_status == 'outofstock' || $product->stock_quantity <= 0))
+            <span class="bg-red-500 text-white text-[10px] tracking-wider uppercase font-bold px-2 py-1 shadow-sm">
+                Out of Stock
+            </span>
+            @elseif($isNew)
             <span class="bg-white/90 text-[10px] tracking-wider uppercase font-bold px-2 py-1 shadow-sm">
                 New
             </span>
@@ -43,17 +47,26 @@
 
         <!-- Quick Actions -->
         <div class="absolute bottom-4 left-0 right-0 px-4 translate-y-full opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300">
-            <button 
-                class="w-full bg-white text-black text-xs font-bold uppercase py-3 shadow-lg hover:bg-black hover:text-white transition-colors flex items-center justify-center gap-2"
-                data-product-inquiry
-                data-product-name="{{ $name }}"
-                data-product-sku="{{ $product?->sku ?? 'N/A' }}"
-                data-product-price="{{ $price }}"
-                data-product-url="{{ $link }}"
-                data-whatsapp-number="{{ \App\Models\Setting::get('contact_whatsapp') ?? '919928154903' }}"
-            >
-                <i class="bi bi-whatsapp text-green-500"></i> Inquire Now
-            </button>
+            @if($product && ($product->stock_status == 'outofstock' || $product->stock_quantity <= 0))
+                <button 
+                    class="w-full bg-gray-300 text-gray-500 text-xs font-bold uppercase py-3 shadow-lg cursor-not-allowed flex items-center justify-center gap-2"
+                    disabled
+                >
+                    <i class="bi bi-x-circle"></i> Currently Unavailable
+                </button>
+            @else
+                <button 
+                    class="w-full bg-white text-black text-xs font-bold uppercase py-3 shadow-lg hover:bg-black hover:text-white transition-colors flex items-center justify-center gap-2"
+                    data-product-inquiry
+                    data-product-name="{{ $name }}"
+                    data-product-sku="{{ $product?->sku ?? 'N/A' }}"
+                    data-product-price="{{ $price }}"
+                    data-product-url="{{ $link }}"
+                    data-whatsapp-number="{{ \App\Models\Setting::get('contact_whatsapp') ?? '919928154903' }}"
+                >
+                    <i class="bi bi-whatsapp text-green-500"></i> Inquire Now
+                </button>
+            @endif
         </div>
     </div>
 
