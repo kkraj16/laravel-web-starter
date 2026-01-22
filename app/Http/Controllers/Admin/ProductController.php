@@ -50,29 +50,30 @@ class ProductController extends Controller
     {
         $request->validate([
             'name' => 'required|string|min:3|max:255',
-            'product_type' => 'required|in:simple,variable,digital',
             'categories' => 'required|array|min:1',
             'price' => 'required|numeric|min:1',
-            'sale_price' => 'nullable|numeric|min:0|lt:price',
+            'sale_discount' => 'nullable|numeric|min:0|max:100',
             'sku' => 'required|alpha_dash|unique:products,sku',
-            'stock_quantity' => 'nullable|integer|min:0',
-            'sale_start' => 'nullable|date',
-            'sale_end' => 'nullable|date|after:sale_start',
-            'sale_end' => 'nullable|date|after:sale_start',
+            'stock_status' => 'nullable|in:instock,outofstock,onbackorder',
             'image' => 'required|image|mimes:jpeg,png,jpg,webp|max:2048',
-            'manage_stock' => 'boolean',
             'meta_title' => 'nullable|string|max:60',
             'meta_description' => 'nullable|string|max:160',
+            'meta_keywords' => 'nullable|string|max:255',
             'material' => 'nullable|string|max:100',
-            'purity' => 'nullable|string|max:100',
             'weight' => 'nullable|numeric|min:0',
         ]);
 
-        $data = $request->except(['image', 'categories', 'variants', 'gallery_images']);
+        $data = $request->except(['image', 'categories', 'sale_discount']);
         $data['slug'] = Str::slug($request->name) . '-' . Str::random(4);
         $data['is_active'] = $request->has('is_active');
-        $data['manage_stock'] = $request->has('manage_stock');
-        $data['is_trending'] = $request->has('is_trending');
+        $data['product_type'] = 'simple'; // Default to simple
+        
+        // Calculate sale_price from discount percentage
+        if ($request->filled('sale_discount') && $request->sale_discount > 0) {
+            $data['sale_price'] = $request->price * (1 - ($request->sale_discount / 100));
+        } else {
+            $data['sale_price'] = null;
+        }
         
         $product = Product::create($data);
 
@@ -117,32 +118,27 @@ class ProductController extends Controller
     {
           $request->validate([
             'name' => 'required|string|min:3|max:255',
-            'product_type' => 'required|in:simple,variable,digital',
             'categories' => 'required|array|min:1',
             'price' => 'required|numeric|min:1',
-            'sale_price' => 'nullable|numeric|min:0|lt:price',
+            'sale_discount' => 'nullable|numeric|min:0|max:100',
             'sku' => ['required', 'alpha_dash', Rule::unique('products')->ignore($product->id)],
-            'stock_quantity' => 'nullable|integer|min:0',
-            'sale_start' => 'nullable|date',
-            'sale_end' => 'nullable|date|after:sale_start',
+            'stock_status' => 'nullable|in:instock,outofstock,onbackorder',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
-            'manage_stock' => 'boolean',
             'meta_title' => 'nullable|string|max:60',
             'meta_description' => 'nullable|string|max:160',
+            'meta_keywords' => 'nullable|string|max:255',
             'material' => 'nullable|string|max:100',
-            'purity' => 'nullable|string|max:100',
             'weight' => 'nullable|numeric|min:0',
         ]);
 
-        $data = $request->except(['image', 'categories', 'variants']);
-        // Don't change slug on update usually, or keep consistent logic
-        // $data['slug'] = Str::slug($request->name); 
+        $data = $request->except(['image', 'categories', 'sale_discount']);
         $data['is_active'] = $request->has('is_active');
-        $data['manage_stock'] = $request->has('manage_stock');
         
-        // Auto update stock status
-        if($request->stock_quantity == 0 && $data['manage_stock']) {
-            $data['stock_status'] = 'outofstock';
+        // Calculate sale_price from discount percentage
+        if ($request->filled('sale_discount') && $request->sale_discount > 0) {
+            $data['sale_price'] = $request->price * (1 - ($request->sale_discount / 100));
+        } else {
+            $data['sale_price'] = null;
         }
 
         $product->update($data);

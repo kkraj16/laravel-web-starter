@@ -34,7 +34,7 @@
 
         <!-- Badges -->
         <div class="absolute top-3 left-3 flex flex-col space-y-2 pointer-events-none">
-            @if($product && ($product->stock_status == 'outofstock' || $product->stock_quantity <= 0))
+            @if($product && $product->stock_status == 'outofstock')
             <span class="bg-red-500 text-white text-[10px] tracking-wider uppercase font-bold px-2 py-1 shadow-sm">
                 Out of Stock
             </span>
@@ -47,7 +47,7 @@
 
         <!-- Quick Actions -->
         <div class="absolute bottom-4 left-0 right-0 px-4 translate-y-full opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300">
-            @if($product && ($product->stock_status == 'outofstock' || $product->stock_quantity <= 0))
+            @if($product && $product->stock_status == 'outofstock')
                 <button 
                     class="w-full bg-gray-300 text-gray-500 text-xs font-bold uppercase py-3 shadow-lg cursor-not-allowed flex items-center justify-center gap-2"
                     disabled

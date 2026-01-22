@@ -59,7 +59,7 @@
                      <div>
                         <span class="block text-[10px] font-bold uppercase tracking-widest text-neutral-400 mb-1">Availability</span>
                         <span class="text-sm font-medium text-neutral-900">
-                             @if($product->stock_status == 'outofstock' || $product->stock_quantity <= 0)
+                             @if($product->stock_status == 'outofstock')
                                 <span class="text-red-500">Out of Stock</span>
                             @else
                                 <span class="text-green-600">In Stock</span>
@@ -70,7 +70,7 @@
 
                 <!-- Actions -->
                 <div class="mt-auto space-y-3">
-                     @if($product->stock_status == 'outofstock' || $product->stock_quantity <= 0)
+                     @if($product->stock_status == 'outofstock')
                         <button disabled class="w-full py-4 text-center bg-neutral-100 text-neutral-400 text-xs font-bold uppercase tracking-[0.2em] rounded-sm cursor-not-allowed">
                             Currently Unavailable
                         </button>
