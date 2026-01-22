@@ -29,10 +29,19 @@
         @yield('content')
     </main>
 
+
     <x-frontend.footer />
+
+    <!-- WhatsApp Inquiry Modal Container -->
+    <div id="whatsapp-modal-container"></div>
 
     <!-- Swiper JS -->
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    
+    <!-- Product Inquiry Modal Script -->
+    <link rel="stylesheet" href="{{ asset('css/product-inquiry-modal.css') }}">
+    <script src="{{ asset('js/product-inquiry-modal.js') }}" defer></script>
+    
     @stack('scripts')
 </body>
 </html>

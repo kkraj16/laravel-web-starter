@@ -45,10 +45,18 @@
                         </div>
                     @endif
 
-                    <div class="absolute bottom-4 left-0 right-0 px-4 opacity-0 group-hover:opacity-100 transition-all duration-300 translate-y-4 group-hover:translate-y-0 text-center">
-                        <a href="{{ route('products.show', $product->slug) }}" class="inline-block w-full bg-white text-black text-xs font-bold uppercase tracking-widest py-3 hover:bg-black hover:text-white transition-colors shadow-lg">
-                            View Details
-                        </a>
+                    <div class="absolute bottom-4 left-0 right-0 px-4 translate-y-full opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300">
+                        <button 
+                            class="w-full bg-white text-black text-xs font-bold uppercase py-3 shadow-lg hover:bg-black hover:text-white transition-colors flex items-center justify-center gap-2"
+                            data-product-inquiry
+                            data-product-name="{{ $product->name }}"
+                            data-product-sku="{{ $product->sku ?? 'N/A' }}"
+                            data-product-price="₹{{ number_format($product->price, 0) }}"
+                            data-product-url="{{ route('products.show', $product->slug) }}"
+                            data-whatsapp-number="{{ \App\Models\Setting::get('contact_whatsapp') ?? '919928154903' }}"
+                        >
+                            <i class="bi bi-whatsapp text-green-500"></i> Inquire Now
+                        </button>
                     </div>
                 </div>
 

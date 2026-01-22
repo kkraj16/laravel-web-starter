@@ -1,0 +1,163 @@
+/**
+ * Product Inquiry Modal Styles
+ * 
+ * Scoped styles for WhatsApp QR inquiry modal
+ * Matches existing theme design patterns
+ */
+
+/* Modal Overlay */
+.whatsapp-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(4px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    padding: 1rem;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.whatsapp-modal-overlay.active {
+    opacity: 1;
+}
+
+/* Modal Content */
+.whatsapp-modal-content {
+    background: white;
+    border-radius: 0;
+    max-width: 420px;
+    width: 100%;
+    position: relative;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+    transform: scale(0.9);
+    transition: transform 0.3s ease;
+}
+
+.whatsapp-modal-overlay.active .whatsapp-modal-content {
+    transform: scale(1);
+}
+
+/* Close Button */
+.whatsapp-modal-close {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    width: 32px;
+    height: 32px;
+    border: 1px solid #e5e7eb;
+    background: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    z-index: 10;
+    color: #6b7280;
+    font-size: 14px;
+}
+
+.whatsapp-modal-close:hover {
+    background: #1a1a1a;
+    border-color: #1a1a1a;
+    color: white;
+}
+
+/* Modal Body */
+.whatsapp-modal-body {
+    padding: 3rem 2.5rem;
+    text-align: center;
+}
+
+/* Modal Title */
+.whatsapp-modal-title {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 1.5rem;
+    font-weight: 400;
+    color: #1a1a1a;
+    margin-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+.whatsapp-modal-title i {
+    font-size: 1.75rem;
+}
+
+.text-green-500 {
+    color: #25D366;
+}
+
+/* Modal Subtitle */
+.whatsapp-modal-subtitle {
+    font-size: 0.875rem;
+    color: #6b7280;
+    margin-bottom: 2rem;
+    font-weight: 300;
+}
+
+/* QR Container */
+.whatsapp-qr-container {
+    background: white;
+    border: 1px solid #e5e7eb;
+    padding: 1.5rem;
+    display: inline-block;
+    margin: 0 auto 1.5rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+#whatsapp-qr-code {
+    display: block;
+}
+
+/* Modal Hint */
+.whatsapp-modal-hint {
+    font-size: 0.75rem;
+    color: #9ca3af;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-weight: 600;
+    margin: 0;
+}
+
+/* Mobile Optimization */
+@media (max-width: 767px) {
+    /* Hide modal on mobile since we redirect */
+    .whatsapp-modal-overlay {
+        display: none !important;
+    }
+}
+
+/* Responsive Adjustments */
+@media (max-width: 480px) {
+    .whatsapp-modal-body {
+        padding: 2rem 1.5rem;
+    }
+
+    .whatsapp-modal-title {
+        font-size: 1.25rem;
+    }
+
+    .whatsapp-qr-container {
+        padding: 1rem;
+    }
+}
+
+/* Accessibility */
+.whatsapp-modal-overlay:focus-within .whatsapp-modal-content {
+    outline: 2px solid #c89b3c;
+    outline-offset: 4px;
+}
+
+/* Prevent body scroll when modal is open */
+body.modal-open {
+    overflow: hidden;
+}
