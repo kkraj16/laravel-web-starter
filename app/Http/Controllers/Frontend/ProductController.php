@@ -23,12 +23,19 @@ class ProductController extends Controller
             });
         }
 
-        // Filter by Category
-        if ($request->has('categories') && is_array($request->categories)) {
+        // Filter by Category (supports both slug and ID array)
+        if ($request->has('category') && $request->category != '') {
+            // Single category by slug (from footer links)
+            $query->whereHas('categories', function($q) use ($request) {
+                $q->where('categories.slug', $request->category);
+            });
+        } elseif ($request->has('categories') && is_array($request->categories)) {
+            // Multiple categories by IDs (from filter sidebar)
             $query->whereHas('categories', function($q) use ($request) {
                 $q->whereIn('categories.id', $request->categories);
             });
         }
+
 
         // Filter by Price Range
         if ($request->has('min_price') && $request->min_price != '') {
