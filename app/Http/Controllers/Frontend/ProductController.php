@@ -98,7 +98,26 @@ class ProductController extends Controller
         $materials = Product::distinct()->pluck('material')->filter()->values();
         $purities = Product::distinct()->pluck('purity')->filter()->values();
 
-        return view('themes.default.products.index', compact('products', 'categories', 'minPrice', 'maxPrice', 'materials', 'purities'));
+        // Pass selected category slug for highlighting
+        $selectedCategorySlug = $request->get('category', null);
+        
+        // Get selected category ID if slug is provided
+        $selectedCategoryId = null;
+        if ($selectedCategorySlug) {
+            $selectedCategory = Category::where('slug', $selectedCategorySlug)->first();
+            $selectedCategoryId = $selectedCategory ? $selectedCategory->id : null;
+        }
+
+        return view('themes.default.products.index', compact(
+            'products', 
+            'categories', 
+            'minPrice', 
+            'maxPrice', 
+            'materials', 
+            'purities',
+            'selectedCategorySlug',
+            'selectedCategoryId'
+        ));
     }
     public function show($slug)
     {

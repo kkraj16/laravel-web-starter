@@ -148,9 +148,9 @@
                 loading: false,
                 filters: {
                     search: new URLSearchParams(window.location.search).get('search') || '',
-                    categories: new URLSearchParams(window.location.search).getAll('categories[]').map(Number),
-                    materials: new URLSearchParams(window.location.search).getAll('materials[]'),
-                    purities: new URLSearchParams(window.location.search).getAll('purities[]'),
+                    categories: [],
+                    materials: [],
+                    purities: [],
                     min_price: new URLSearchParams(window.location.search).get('min_price') || '',
                     max_price: new URLSearchParams(window.location.search).get('max_price') || '',
                     sort: new URLSearchParams(window.location.search).get('sort') || 'newest',
@@ -158,7 +158,46 @@
                 totalProducts: '{{ $products->total() }}',
 
                 init() {
-                    // Update total count on load if needed
+                    // Initialize categories from URL
+                    const urlParams = new URLSearchParams(window.location.search);
+                    
+                    // Check if category slug is provided (from footer link)
+                    const categorySlug = urlParams.get('category');
+                    if (categorySlug && {{ $selectedCategoryId ?? 'null' }}) {
+                        this.filters.categories = [{{ $selectedCategoryId }}];
+                    } else {
+                        // Parse category IDs from URL (handles both categories[] and categories[0], categories[1] formats)
+                        this.filters.categories = this.parseArrayParams(urlParams, 'categories');
+                    }
+
+                    // Parse materials and purities (handles indexed formats)
+                    this.filters.materials = this.parseArrayParams(urlParams, 'materials');
+                    this.filters.purities = this.parseArrayParams(urlParams, 'purities');
+
+                    // Initialize pagination links on page load
+                    this.$nextTick(() => {
+                        this.initializePaginationLinks();
+                    });
+                },
+
+                parseArrayParams(urlParams, paramName) {
+                    const values = [];
+                    
+                    // Try non-indexed format first: paramName[]
+                    const nonIndexed = urlParams.getAll(`${paramName}[]`);
+                    if (nonIndexed.length > 0) {
+                        values.push(...nonIndexed);
+                    } else {
+                        // Try indexed format: paramName[0], paramName[1], etc.
+                        for (const [key, value] of urlParams.entries()) {
+                            if (key.startsWith(`${paramName}[`) && key.endsWith(']')) {
+                                values.push(value);
+                            }
+                        }
+                    }
+                    
+                    // Convert to numbers if it's categories
+                    return paramName === 'categories' ? values.map(Number) : values;
                 },
 
                 async updateFilters() {
@@ -193,14 +232,70 @@
                         
                         document.querySelector('#product-grid-container').innerHTML = newGrid;
                         
-                        // Update total count if possible (extract from new HTML or pass as data attribute)
-                        // This is a simple scrape, might need refinement if count is dynamic
-                        // For now assuming the controller returns the whole view, we can grab the count from a data attribute if we added one, 
-                        // or just rely on the server side render.
-                        // Ideally we should return a JSON with html and count, but instructed to keep minimal changes.
+                        // Reinitialize pagination links to preserve filters
+                        this.initializePaginationLinks();
                         
                     } catch (error) {
                         console.error('Error fetching products:', error);
+                    } finally {
+                        this.loading = false;
+                    }
+                },
+
+                initializePaginationLinks() {
+                    // Find all pagination links and update them to preserve filters
+                    const paginationLinks = document.querySelectorAll('#product-grid-container .pagination a');
+                    paginationLinks.forEach(link => {
+                        link.addEventListener('click', (e) => {
+                            e.preventDefault();
+                            const url = new URL(link.href);
+                            const page = url.searchParams.get('page');
+                            
+                            if (page) {
+                                // Build params with current filters
+                                const params = new URLSearchParams();
+                                if(this.filters.search) params.append('search', this.filters.search);
+                                this.filters.categories.forEach(id => params.append('categories[]', id));
+                                this.filters.materials.forEach(m => params.append('materials[]', m));
+                                this.filters.purities.forEach(p => params.append('purities[]', p));
+                                if(this.filters.min_price) params.append('min_price', this.filters.min_price);
+                                if(this.filters.max_price) params.append('max_price', this.filters.max_price);
+                                params.append('sort', this.filters.sort);
+                                params.append('page', page);
+                                
+                                const newUrl = `${window.location.pathname}?${params.toString()}`;
+                                window.history.pushState({}, '', newUrl);
+                                
+                                this.fetchPage(newUrl);
+                            }
+                        });
+                    });
+                },
+
+                async fetchPage(url) {
+                    this.loading = true;
+                    try {
+                        const response = await fetch(url, {
+                            headers: {
+                                'X-Requested-With': 'XMLHttpRequest'
+                            }
+                        });
+                        const html = await response.text();
+                        
+                        const parser = new DOMParser();
+                        const doc = parser.parseFromString(html, 'text/html');
+                        const newGrid = doc.querySelector('#product-grid-container').innerHTML;
+                        
+                        document.querySelector('#product-grid-container').innerHTML = newGrid;
+                        
+                        // Scroll to top of product grid
+                        document.querySelector('#product-grid-container').scrollIntoView({ behavior: 'smooth', block: 'start' });
+                        
+                        // Reinitialize pagination links
+                        this.initializePaginationLinks();
+                        
+                    } catch (error) {
+                        console.error('Error fetching page:', error);
                     } finally {
                         this.loading = false;
                     }
