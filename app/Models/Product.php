@@ -78,4 +78,21 @@ class Product extends Model
 
         return Str::startsWith($path, 'http') ? $path : asset('storage/' . $path);
     }
+
+    public function getPriceAttribute($value)
+    {
+        // Sanitize string values with commas (e.g. "76,500") to float
+        if (is_string($value)) {
+            return (float) str_replace(',', '', $value);
+        }
+        return (float) $value;
+    }
+
+    public function getSalePriceAttribute($value)
+    {
+        if (is_string($value)) {
+            return (float) str_replace(',', '', $value);
+        }
+        return $value ? (float) $value : null;
+    }
 }
