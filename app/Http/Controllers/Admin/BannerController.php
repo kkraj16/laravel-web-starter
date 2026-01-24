@@ -11,7 +11,7 @@ class BannerController extends Controller
 {
     public function index()
     {
-        $banners = Banner::orderBy('order', 'asc')->get();
+        $banners = Banner::orderBy('sort_order', 'asc')->get();
         return view('admin.banners.index', compact('banners'));
     }
 
@@ -35,7 +35,7 @@ class BannerController extends Controller
             'text_alignment' => 'required|in:left,center,right',
             'button_text' => 'nullable|string|max:255',
             'button_link' => 'nullable|string|max:255',
-            'order' => 'integer',
+            'sort_order' => 'integer',
         ]);
 
         $data = $request->except(['image_path', 'mobile_image_path', 'content_image_path']);
@@ -77,7 +77,7 @@ class BannerController extends Controller
             'show_content_image' => 'nullable|boolean',
             'content_image_path' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
             'content_position' => 'nullable|in:left,center,right',
-            'order' => 'integer',
+            'sort_order' => 'integer',
         ]);
 
         $data = $request->except(['image_path', 'mobile_image_path', 'content_image_path']);

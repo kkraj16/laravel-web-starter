@@ -17,7 +17,7 @@ class Banner extends Model
         'mobile_image_path',
         'button_text',
         'button_link',
-        'order',
+        'sort_order',
         'is_active',
         'show_content',
         'overlay_opacity',

@@ -56,7 +56,7 @@
                                     default => 'self-center',
                                 };
                             @endphp
-                            <img src="{{ $banner->content_image_path }}" class="w-36 md:w-36 mb-6 object-contain drop-shadow-xl {{ $imgAlign }}" alt="Banner Content">
+                            <img src="{{ $banner->content_image_path }}" class="w-64 md:w-96 lg:w-[500px] mb-8 object-contain drop-shadow-xl {{ $imgAlign }}" alt="Banner Content">
                         @endif
 
                         @if($banner->show_content)

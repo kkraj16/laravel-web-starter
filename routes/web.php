@@ -24,7 +24,7 @@ Route::get('/', function () {
                 ->get();
 
     $banners = \App\Models\Banner::where('is_active', true)
-                ->orderBy('order', 'asc')
+                ->orderBy('sort_order', 'asc')
                 ->orderBy('created_at', 'desc')
                 ->get();
 

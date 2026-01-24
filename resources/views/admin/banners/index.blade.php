@@ -46,7 +46,7 @@
                         @endif
                     </td>
                     <td class="align-middle">
-                        <span class="badge bg-secondary">{{ $banner->order }}</span>
+                        <span class="badge bg-secondary">{{ $banner->sort_order }}</span>
                     </td>
                     <td class="align-middle">
                         <form action="{{ route('admin.banners.toggle-active', $banner->id) }}" method="POST">

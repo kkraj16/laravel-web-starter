@@ -15,12 +15,20 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+        // Essential Production Seeders
         $this->call([
             RolePermissionSeeder::class,
             UserSeeder::class,
             SettingsSeeder::class,
-            CategorySeeder::class,
-            DemoDataSeeder::class,
+            CategorySeeder::class, // Defaults (Gold, Silver, etc.)
         ]);
+
+        // Optional / Demo Data (Skip in Production)
+        if (app()->isLocal() || app()->runningUnitTests()) {
+            $this->call([
+                DemoDataSeeder::class,
+                // ProductSqlSeeder::class, // Uncomment if you have a SQL dump seeder
+            ]);
+        }
     }
 }

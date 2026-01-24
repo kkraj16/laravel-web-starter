@@ -101,7 +101,7 @@
     <!-- Settings -->
     <div class="col-md-6">
         <label class="form-label fw-bold">Display Order</label>
-        <input type="number" name="order" class="form-control" value="{{ old('order', $banner->order ?? 0) }}">
+        <input type="number" name="sort_order" class="form-control" value="{{ old('sort_order', $banner->sort_order ?? 0) }}">
     </div>
 
      <div class="col-md-6">
