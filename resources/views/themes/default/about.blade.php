@@ -3,11 +3,16 @@
 @section('content')
 
 <!-- Hero Section -->
-<div class="relative py-20 md:py-32 bg-black flex items-center justify-center overflow-hidden">
+<!-- Hero Section -->
+<div class="relative py-20 bg-black flex items-center justify-center overflow-hidden">
     <div class="absolute inset-0 opacity-40 bg-cover bg-center" style="background-image: url('{{ asset('images/banner/banner-background.jpg') }}');"></div>
     <div class="relative z-10 text-center text-white px-4">
-        <h1 class="font-serif text-4xl md:text-5xl mb-6">Our Heritage</h1>
-        <div class="w-16 h-0.5 bg-primary mx-auto"></div>
+        <span class="text-xs font-bold tracking-[0.3em] uppercase text-primary mb-3 block">Timeless Elegance</span>
+        <h1 class="font-serif text-4xl md:text-5xl mb-4">Our Story</h1>
+        <div class="w-12 h-0.5 bg-primary mx-auto mb-1"></div>
+        <p class="text-gray-300 max-w-lg mx-auto text-sm leading-relaxed font-light">
+            Discover the heritage of Ratannam Gold. A journey of trust, purity, and exquisite craftsmanship that defines our legacy in fine jewellery.
+        </p>
     </div>
 </div>
 

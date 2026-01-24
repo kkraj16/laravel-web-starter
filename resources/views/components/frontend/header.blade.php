@@ -19,10 +19,18 @@
         </a>
 
         <!-- Desktop Nav -->
-        <nav class="hidden md:flex items-center space-x-10 text-xs font-medium tracking-widest uppercase">
-            <a href="{{ route('products.index') }}" class="hover:text-primary transition-colors">Collections</a>
-            <a href="{{ route('about') }}" class="hover:text-primary transition-colors">About Us</a>
-            <a href="{{ route('contact') }}" class="hover:text-primary transition-colors">Contact</a>
+        <nav class="hidden md:flex items-center space-x-12">
+            @foreach([
+                ['name' => 'Collections', 'route' => 'products.index', 'active' => 'products.*'],
+                ['name' => 'About Us', 'route' => 'about', 'active' => 'about'],
+                ['name' => 'Contact', 'route' => 'contact', 'active' => 'contact'],
+            ] as $link)
+                <a href="{{ route($link['route']) }}"
+                   class="group relative py-2 text-xs font-bold uppercase tracking-[0.2em] transition-colors duration-300 {{ request()->routeIs($link['active']) ? 'text-primary' : 'text-gray-800 hover:text-primary' }}">
+                    {{ $link['name'] }}
+                    <span class="absolute bottom-0 left-0 h-0.5 bg-primary transition-all duration-300 {{ request()->routeIs($link['active']) ? 'w-full' : 'w-0 group-hover:w-full' }}"></span>
+                </a>
+            @endforeach
         </nav>
 
         <!-- Mobile Right (Cart/Search - Optional) -->
@@ -63,10 +71,17 @@
             <button @click="open = false" class="text-2xl">&times;</button>
         </div>
 
-        <nav class="p-6 flex flex-col space-y-6 text-sm font-medium tracking-widest uppercase">
-            <a href="{{ route('products.index') }}" class="block py-2 border-b border-gray-50">Collections</a>
-            <a href="{{ route('about') }}" class="block py-2 border-b border-gray-50">About Us</a>
-            <a href="{{ route('contact') }}" class="block py-2 border-b border-gray-50">Contact Us</a>
+        <nav class="p-6 flex flex-col space-y-2">
+            @foreach([
+                ['name' => 'Collections', 'route' => 'products.index', 'active' => 'products.*'],
+                ['name' => 'About Us', 'route' => 'about', 'active' => 'about'],
+                ['name' => 'Contact', 'route' => 'contact', 'active' => 'contact'],
+            ] as $link)
+                <a href="{{ route($link['route']) }}"
+                   class="block py-4 border-b border-gray-50 text-sm font-bold uppercase tracking-[0.15em] transition-all duration-300 {{ request()->routeIs($link['active']) ? 'text-primary border-primary/30 pl-4 bg-primary/5' : 'text-gray-600 hover:text-primary hover:pl-2' }}">
+                    {{ $link['name'] }}
+                </a>
+            @endforeach
         </nav>
     </div>
 </div>
