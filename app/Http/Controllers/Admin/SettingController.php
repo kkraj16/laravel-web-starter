@@ -113,6 +113,10 @@ class SettingController extends Controller
         Setting::set('rate_gold_22k', $request->rate_gold_22k, 'rates', 'number');
         Setting::set('rate_silver', $request->rate_silver, 'rates', 'number');
 
+        // Handle visibility toggles (checkboxes)
+        Setting::set('show_gold_prices', $request->has('show_gold_prices') ? 1 : 0, 'rates', 'boolean');
+        Setting::set('show_silver_prices', $request->has('show_silver_prices') ? 1 : 0, 'rates', 'boolean');
+
         return redirect()->back()->with('success', 'Live rates updated successfully.');
     }
 }

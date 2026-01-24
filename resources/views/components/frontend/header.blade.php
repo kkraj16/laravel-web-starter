@@ -21,19 +21,13 @@
         <!-- Desktop Nav -->
         <nav class="hidden md:flex items-center space-x-10 text-xs font-medium tracking-widest uppercase">
             <a href="{{ route('products.index') }}" class="hover:text-primary transition-colors">Collections</a>
-            <a href="{{ route('about') }}" class="hover:text-primary transition-colors">Heritage</a>
+            <a href="{{ route('about') }}" class="hover:text-primary transition-colors">About Us</a>
             <a href="{{ route('contact') }}" class="hover:text-primary transition-colors">Contact</a>
-            
-            <a href="{{ route('login') }}" class="w-8 h-8 rounded-full bg-gray-50 flex items-center justify-center hover:bg-black hover:text-white transition-all">
-                <i class="bi bi-person text-sm"></i>
-            </a>
         </nav>
 
         <!-- Mobile Right (Cart/Search - Optional) -->
         <div class="md:hidden flex items-center">
-            <a href="{{ route('login') }}" class="text-xl">
-                <i class="bi bi-person"></i>
-            </a>
+            <!-- Login button hidden -->
         </div>
     </div>
 </header>
@@ -71,9 +65,8 @@
 
         <nav class="p-6 flex flex-col space-y-6 text-sm font-medium tracking-widest uppercase">
             <a href="{{ route('products.index') }}" class="block py-2 border-b border-gray-50">Collections</a>
-            <a href="{{ route('about') }}" class="block py-2 border-b border-gray-50">Heritage</a>
+            <a href="{{ route('about') }}" class="block py-2 border-b border-gray-50">About Us</a>
             <a href="{{ route('contact') }}" class="block py-2 border-b border-gray-50">Contact Us</a>
-            <a href="{{ route('login') }}" class="block py-2 text-gray-500">My Account</a>
         </nav>
     </div>
 </div>

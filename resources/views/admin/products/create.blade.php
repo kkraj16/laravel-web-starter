@@ -126,9 +126,8 @@
                         </h5>
                         <div class="row g-3">
                             <div class="col-md-6">
-                                <label class="form-label fw-bold">Category <span class="text-danger">*</span></label>
-                                <select name="categories[]" class="form-select" required>
-                                    <option value="">Select Category</option>
+                                <label class="form-label fw-bold">Categories <span class="text-danger">*</span></label>
+                                <select name="categories[]" id="categorySelect" class="form-select" multiple required size="8" style="height: auto;">
                                     @foreach($categories as $cat)
                                         <option value="{{ $cat->id }}">{{ $cat->name }}</option>
                                         @foreach($cat->children as $child)
@@ -136,17 +135,24 @@
                                         @endforeach
                                     @endforeach
                                 </select>
-                                <small class="text-muted">Select the primary category for this product</small>
+                                <small class="text-muted">Hold Ctrl (Cmd on Mac) to select multiple categories</small>
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label fw-bold">Status & Visibility</label>
                                 <div class="card bg-light">
                                     <div class="card-body">
-                                        <div class="form-check form-switch mb-0">
+                                        <div class="form-check form-switch mb-3">
                                             <input class="form-check-input" type="checkbox" role="switch" id="isActive" name="is_active" checked>
                                             <label class="form-check-label" for="isActive">
                                                 <strong>Active / Published</strong>
                                                 <small class="d-block text-muted">Make this product visible on website</small>
+                                            </label>
+                                        </div>
+                                        <div class="form-check form-switch mb-0">
+                                            <input class="form-check-input" type="checkbox" role="switch" id="isTrending" name="is_trending">
+                                            <label class="form-check-label" for="isTrending">
+                                                <strong>Trending Product</strong>
+                                                <small class="d-block text-muted">Display in Trending Masterpieces section on homepage</small>
                                             </label>
                                         </div>
                                     </div>
@@ -258,6 +264,7 @@ document.addEventListener('DOMContentLoaded', function() {
             calculatedPriceSpan.classList.remove('text-success', 'fw-bold');
         }
     }
+
 
     regularPriceInput.addEventListener('input', calculateSalePrice);
     discountInput.addEventListener('input', calculateSalePrice);

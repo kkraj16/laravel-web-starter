@@ -66,6 +66,7 @@ class ProductController extends Controller
         $data = $request->except(['image', 'categories', 'sale_discount']);
         $data['slug'] = Str::slug($request->name) . '-' . Str::random(4);
         $data['is_active'] = $request->has('is_active');
+        $data['is_trending'] = $request->has('is_trending');
         $data['product_type'] = 'simple'; // Default to simple
         
         // Calculate sale_price from discount percentage
@@ -133,6 +134,7 @@ class ProductController extends Controller
 
         $data = $request->except(['image', 'categories', 'sale_discount']);
         $data['is_active'] = $request->has('is_active');
+        $data['is_trending'] = $request->has('is_trending');
         
         // Calculate sale_price from discount percentage
         if ($request->filled('sale_discount') && $request->sale_discount > 0) {

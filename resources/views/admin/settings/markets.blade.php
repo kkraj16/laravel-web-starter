@@ -33,6 +33,32 @@
                             <input type="number" step="0.01" name="rate_silver" class="form-control form-control-lg" value="{{ $settings['rate_silver'] ?? '' }}" placeholder="0.00">
                         </div>
                     </div>
+
+                    <hr class="my-4">
+
+                    <h5 class="mb-3 text-uppercase fs-7 fw-bold text-muted">
+                        <i class="bi bi-eye me-2"></i>Visibility Settings
+                    </h5>
+                    
+                    <div class="mb-3">
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" id="showGoldPrices" name="show_gold_prices" value="1" {{ ($settings['show_gold_prices'] ?? 1) ? 'checked' : '' }}>
+                            <label class="form-check-label fw-bold" for="showGoldPrices">
+                                Show Gold Prices in Ticker
+                            </label>
+                            <small class="d-block text-muted mt-1">Display Gold 24K and 22K rates in the top price ticker</small>
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" id="showSilverPrices" name="show_silver_prices" value="1" {{ ($settings['show_silver_prices'] ?? 1) ? 'checked' : '' }}>
+                            <label class="form-check-label fw-bold" for="showSilverPrices">
+                                Show Silver Prices in Ticker
+                            </label>
+                            <small class="d-block text-muted mt-1">Display Silver rates in the top price ticker</small>
+                        </div>
+                    </div>
                     
                     <button type="submit" class="btn btn-warning w-100 fw-bold py-2">Update Market Rates</button>
                     <div class="text-center mt-3">

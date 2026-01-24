@@ -3,9 +3,8 @@
 @section('content')
 
 <!-- Hero Section -->
-<div class="relative py-24 bg-black flex items-center justify-center">
-    <!-- Dark Background -->
-    <div class="absolute inset-0 bg-[#1a1a1a]"></div>
+<div class="relative py-24 bg-black flex items-center justify-center overflow-hidden">
+    <div class="absolute inset-0 opacity-40 bg-cover bg-center" style="background-image: url('{{ asset('images/banner/banner-background.jpg') }}');"></div>
     <div class="relative z-10 text-center text-white px-4">
         <h6 class="text-primary tracking-[0.3em] uppercase text-xs mb-3">Personal Assistance</h6>
         <h1 class="font-serif text-4xl md:text-5xl mb-4">Contact Us</h1>
@@ -102,8 +101,27 @@
 
             <!-- Map -->
             <div class="w-full md:w-2/3 bg-gray-200 min-h-[400px]">
+                @php
+                    // Generate map URL from coordinates if available, otherwise use custom embed URL
+                    $mapUrl = '';
+                    if (!empty($contactInfo['map_coordinates'])) {
+                        // Parse coordinates (format: "latitude, longitude" or "latitude,longitude")
+                        $coords = explode(',', str_replace(' ', '', $contactInfo['map_coordinates']));
+                        if (count($coords) == 2) {
+                            $lat = trim($coords[0]);
+                            $lng = trim($coords[1]);
+                            $mapUrl = "https://www.google.com/maps?q={$lat},{$lng}&z=15&output=embed";
+                        }
+                    }
+                    
+                    // Fallback to custom embed URL if coordinates not set
+                    if (empty($mapUrl)) {
+                        $mapUrl = $contactInfo['google_map_embed'] ?? 'https://www.google.com/maps/embed?pb=...';
+                    }
+                @endphp
+                
                 <iframe 
-                    src="{{ $contactInfo['google_map_embed'] ?? 'https://www.google.com/maps/embed?pb=...' }}" 
+                    src="{{ $mapUrl }}" 
                     width="100%" 
                     height="100%" 
                     style="border:0;" 

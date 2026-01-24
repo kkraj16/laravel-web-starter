@@ -4,7 +4,7 @@
 
 <!-- Hero Section -->
 <div class="relative py-20 md:py-32 bg-black flex items-center justify-center overflow-hidden">
-    <div class="absolute inset-0 opacity-40 bg-cover bg-center" style="background-image: url('{{ asset('images/about-hero.jpeg') }}');"></div>
+    <div class="absolute inset-0 opacity-40 bg-cover bg-center" style="background-image: url('{{ asset('images/banner/banner-background.jpg') }}');"></div>
     <div class="relative z-10 text-center text-white px-4">
         <h1 class="font-serif text-4xl md:text-5xl mb-6">Our Heritage</h1>
         <div class="w-16 h-0.5 bg-primary mx-auto"></div>

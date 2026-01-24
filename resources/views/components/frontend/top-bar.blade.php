@@ -1,3 +1,12 @@
+@php
+    use App\Models\Setting;
+    $showGoldPrices = Setting::get('show_gold_prices', 1);
+    $showSilverPrices = Setting::get('show_silver_prices', 1);
+    $rateGold24k = Setting::get('rate_gold_24k', '76,500');
+    $rateGold22k = Setting::get('rate_gold_22k', '71,200');
+    $rateSilver = Setting::get('rate_silver', '92,500');
+@endphp
+
 <style>
     @keyframes ticker {
         0% {
@@ -83,23 +92,27 @@
     <!-- Scrolling Ticker Content -->
     <div class="ticker-content">
         <!-- First Set -->
+        @if($showGoldPrices)
         <span class="ticker-item">
             <span class="ticker-label">Gold 24K</span>
-            <span class="ticker-value">₹76,500</span>
+            <span class="ticker-value">₹{{ number_format($rateGold24k) }}</span>
         </span>
         <span class="ticker-separator">|</span>
 
         <span class="ticker-item">
             <span class="ticker-label">Gold 22K</span>
-            <span class="ticker-value">₹71,200</span>
+            <span class="ticker-value">₹{{ number_format($rateGold22k) }}</span>
         </span>
         <span class="ticker-separator">|</span>
+        @endif
 
+        @if($showSilverPrices)
         <span class="ticker-item">
             <span class="ticker-label">Silver</span>
-            <span class="ticker-value">₹92,500</span>
+            <span class="ticker-value">₹{{ number_format($rateSilver) }}</span>
         </span>
         <span class="ticker-separator">|</span>
+        @endif
 
         <span class="ticker-item" style="color: rgb(250 204 21); font-weight: 600; text-shadow: 0 0 12px rgba(250, 204, 21, 0.4);">
             ✨ New Collection Launch - Exclusive Traditional Designs
@@ -112,23 +125,27 @@
         <span class="ticker-separator">|</span>
 
         <!-- Duplicate for seamless loop -->
+        @if($showGoldPrices)
         <span class="ticker-item">
             <span class="ticker-label">Gold 24K</span>
-            <span class="ticker-value">₹76,500</span>
+            <span class="ticker-value">₹{{ number_format($rateGold24k) }}</span>
         </span>
         <span class="ticker-separator">|</span>
 
         <span class="ticker-item">
             <span class="ticker-label">Gold 22K</span>
-            <span class="ticker-value">₹71,200</span>
+            <span class="ticker-value">₹{{ number_format($rateGold22k) }}</span>
         </span>
         <span class="ticker-separator">|</span>
+        @endif
 
+        @if($showSilverPrices)
         <span class="ticker-item">
             <span class="ticker-label">Silver</span>
-            <span class="ticker-value">₹92,500</span>
+            <span class="ticker-value">₹{{ number_format($rateSilver) }}</span>
         </span>
         <span class="ticker-separator">|</span>
+        @endif
 
         <span class="ticker-item" style="color: rgb(250 204 21); font-weight: 600; text-shadow: 0 0 12px rgba(250, 204, 21, 0.4);">
             ✨ New Collection Launch - Exclusive Traditional Designs

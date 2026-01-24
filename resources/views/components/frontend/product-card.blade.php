@@ -55,17 +55,25 @@
                     <i class="bi bi-x-circle"></i> Currently Unavailable
                 </button>
             @else
-                <button 
-                    class="w-full bg-white text-black text-xs font-bold uppercase py-3 shadow-lg hover:bg-black hover:text-white transition-colors flex items-center justify-center gap-2"
-                    data-product-inquiry
-                    data-product-name="{{ $name }}"
-                    data-product-sku="{{ $product?->sku ?? 'N/A' }}"
-                    data-product-price="{{ $price }}"
-                    data-product-url="{{ $link }}"
-                    data-whatsapp-number="{{ \App\Models\Setting::get('contact_whatsapp') ?? '919928154903' }}"
-                >
-                    <i class="bi bi-whatsapp text-green-500"></i> Inquire Now
-                </button>
+                <div class="grid grid-cols-2 gap-2">
+                    <a 
+                        href="{{ $product ? route('products.show', $product->slug) : '#' }}"
+                        class="bg-black text-white text-xs font-bold uppercase py-3 shadow-lg hover:bg-primary hover:text-black transition-colors flex items-center justify-center gap-2"
+                    >
+                        <i class="bi bi-eye"></i> Details
+                    </a>
+                    <button 
+                        class="bg-white text-black text-xs font-bold uppercase py-3 shadow-lg hover:bg-black hover:text-white transition-colors flex items-center justify-center gap-2"
+                        data-product-inquiry
+                        data-product-name="{{ $name }}"
+                        data-product-sku="{{ $product?->sku ?? 'N/A' }}"
+                        data-product-price="{{ $price }}"
+                        data-product-url="{{ $link }}"
+                        data-whatsapp-number="{{ \App\Models\Setting::get('contact_whatsapp') ?? '919928154903' }}"
+                    >
+                        <i class="bi bi-whatsapp text-green-500"></i> Inquire
+                    </button>
+                </div>
             @endif
         </div>
     </div>
