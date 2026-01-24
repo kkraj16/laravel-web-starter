@@ -16,14 +16,6 @@
             <form action="{{ route('admin.settings.update') }}" method="POST">
                 @csrf
                 <div class="card-body">
-                    <div class="mb-4">
-                        <div class="form-check form-switch p-3 bg-light rounded border">
-                            <input class="form-check-input ms-0 me-2" type="checkbox" id="hidePrices" name="hide_prices" value="1" {{ ($settings['hide_prices'] ?? 0) ? 'checked' : '' }} style="margin-left: -2em;">
-                            <label class="form-check-label fw-bold" for="hidePrices">&nbsp;&nbsp;&nbsp;Hide All Prices Globally</label>
-                            <div class="form-text mt-1 ms-4">If enabled, all product prices will be hidden from the public store.</div>
-                        </div>
-                    </div>
-
                     <h5 class="fw-bold mb-3 border-bottom pb-2">Meta Tags</h5>
                     <div class="row g-3">
                         <div class="col-12">

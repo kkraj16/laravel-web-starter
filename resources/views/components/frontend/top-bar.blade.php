@@ -48,6 +48,10 @@
         padding: 0 3rem;
     }
 
+    .ticker-content:hover {
+        animation-play-state: paused;
+    }
+
     .ticker-item {
         font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
         font-size: 0.625rem;

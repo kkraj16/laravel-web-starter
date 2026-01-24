@@ -36,17 +36,20 @@
      * @returns {string} - WhatsApp URL
      */
     function createWhatsAppUrl(productData) {
-        const { name, sku, price, url, whatsappNumber } = productData;
+        const { name, sku, url, whatsappNumber } = productData;
         
+        // Ensure we have a valid URL
+        const productUrl = url && url.startsWith('http') ? url : window.location.href;
+
         // Construct message in specified format
+        // Removed Price field as requested
         const message = `Hello 👋
 
 I am interested in the following product:
 
 📌 Product Name: ${name || 'N/A'}
 🆔 Product Code: ${sku || 'N/A'}
-💰 Price: ${price || 'N/A'}
-🔗 Product Link: ${url || window.location.href}
+🔗 Product Link: ${productUrl}
 
 Please share more details.`;
 

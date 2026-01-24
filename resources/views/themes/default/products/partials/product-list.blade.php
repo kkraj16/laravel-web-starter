@@ -55,17 +55,25 @@
                                 <i class="bi bi-x-circle"></i> Currently Unavailable
                             </button>
                         @else
-                            <button 
-                                class="w-full bg-white text-black text-xs font-bold uppercase py-3 shadow-lg hover:bg-black hover:text-white transition-colors flex items-center justify-center gap-2"
-                                data-product-inquiry
-                                data-product-name="{{ $product->name }}"
-                                data-product-sku="{{ $product->sku ?? 'N/A' }}"
-                                data-product-price="₹{{ number_format($product->price, 0) }}"
-                                data-product-url="{{ route('products.show', $product->slug) }}"
-                                data-whatsapp-number="{{ \App\Models\Setting::get('contact_whatsapp') ?? '919928154903' }}"
-                            >
-                                <i class="bi bi-whatsapp text-green-500"></i> Inquire Now
-                            </button>
+                            <div class="grid grid-cols-2 gap-2">
+                                <a 
+                                    href="{{ route('products.show', $product->slug) }}"
+                                    class="bg-black text-white text-xs font-bold uppercase py-3 shadow-lg hover:bg-primary hover:text-black transition-colors flex items-center justify-center gap-2"
+                                >
+                                    <i class="bi bi-eye"></i> Details
+                                </a>
+                                <button 
+                                    class="bg-white text-black text-xs font-bold uppercase py-3 shadow-lg hover:bg-black hover:text-white transition-colors flex items-center justify-center gap-2"
+                                    data-product-inquiry
+                                    data-product-name="{{ $product->name }}"
+                                    data-product-sku="{{ $product->sku ?? 'N/A' }}"
+                                    data-product-price="₹{{ number_format($product->price, 0) }}"
+                                    data-product-url="{{ route('products.show', $product->slug) }}"
+                                    data-whatsapp-number="{{ \App\Models\Setting::get('contact_whatsapp') ?? '919928154903' }}"
+                                >
+                                    <i class="bi bi-whatsapp text-green-500"></i> Inquire
+                                </button>
+                            </div>
                         @endif
                     </div>
 
@@ -83,12 +91,22 @@
                             <span>{{ $product->material }}</span>
                         @endif
                     </div>
-                    @if(!$product->hide_price)
-                        <p class="font-medium">
-                            ₹{{ number_format($product->price, 0) }}
-                        </p>
-                    @else
+                    
+                    @php
+                        $hidePrices = \App\Models\Setting::get('hide_prices', 0);
+                    @endphp
+                    
+                    @if($hidePrices)
                         <p class="font-medium text-primary uppercase text-xs tracking-widest">Price on Request</p>
+                    @else
+                        @if($product->sale_price && $product->sale_price < $product->price)
+                            <div class="flex items-center justify-center gap-2">
+                                <span class="text-gray-400 line-through text-xs">₹{{ number_format($product->price, 0) }}</span>
+                                <span class="text-red-600 font-bold">₹{{ number_format($product->sale_price, 0) }}</span>
+                            </div>
+                        @else
+                            <p class="font-medium">₹{{ number_format($product->price, 0) }}</p>
+                        @endif
                     @endif
                 </div>
             </div>

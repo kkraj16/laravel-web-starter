@@ -26,15 +26,23 @@
                 <h1 class="font-serif text-3xl md:text-5xl text-neutral-900 mb-6">{{ $product->name }}</h1>
                 
                 <div class="flex items-center gap-4 mb-8">
-                    @if($product->price > 0 && ($product->stock_status == 'instock' || $product->manage_stock == false))
-                        @if($product->sale_price)
-                            <span class="text-lg text-neutral-400 line-through">₹{{ number_format($product->price) }}</span>
-                            <span class="text-2xl font-medium text-red-600">₹{{ number_format($product->sale_price) }}</span>
-                        @else
-                            <span class="text-2xl font-medium text-neutral-900">₹{{ number_format($product->price) }}</span>
-                        @endif
-                    @else
+                    @php
+                        $hidePrices = \App\Models\Setting::get('hide_prices', 0);
+                    @endphp
+
+                    @if($hidePrices)
                          <span class="text-xl font-bold text-gold-600 uppercase tracking-widest">Price on Request</span>
+                    @else
+                        @if($product->price > 0 && ($product->stock_status == 'instock' || $product->manage_stock == false))
+                            @if($product->sale_price)
+                                <span class="text-lg text-neutral-400 line-through">₹{{ number_format($product->price) }}</span>
+                                <span class="text-2xl font-medium text-red-600">₹{{ number_format($product->sale_price) }}</span>
+                            @else
+                                <span class="text-2xl font-medium text-neutral-900">₹{{ number_format($product->price) }}</span>
+                            @endif
+                        @else
+                             <span class="text-xl font-bold text-gold-600 uppercase tracking-widest">Price on Request</span>
+                        @endif
                     @endif
                 </div>
 

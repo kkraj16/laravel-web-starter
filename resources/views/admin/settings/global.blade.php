@@ -44,6 +44,21 @@
                             <input type="file" name="site_favicon" class="form-control" accept="image/x-icon, image/png, image/jpeg, image/svg+xml">
                             <div class="form-text">Upload a favicon (Icon). Recommended: 32x32 ICO or PNG. Max: 1MB.</div>
                         </div>
+
+                        <div class="col-12">
+                            <hr class="my-3">
+                            <h5 class="mb-3"><i class="bi bi-eye-slash me-2"></i>Price Display Settings</h5>
+                        </div>
+
+                        <div class="col-12">
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" id="hidePrices" name="hide_prices" value="1" {{ ($settings['hide_prices'] ?? 0) ? 'checked' : '' }}>
+                                <label class="form-check-label fw-bold" for="hidePrices">
+                                    Hide All Prices Globally
+                                </label>
+                                <div class="form-text">When enabled, all product prices will be hidden across the website. Customers will see "Price on Request" instead.</div>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="card-footer text-end">

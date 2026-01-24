@@ -7,6 +7,10 @@ use Illuminate\Support\Facades\Route;
 Route::group(['middleware' => ['web', 'auth']], function () {
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
     
+    // Profile Routes
+    Route::get('/profile', [\App\Http\Controllers\Admin\UserController::class, 'profile'])->name('profile');
+    Route::put('/profile', [\App\Http\Controllers\Admin\UserController::class, 'updateProfile'])->name('profile.update');
+    
     // RBAC Routes
     Route::resource('users', \App\Http\Controllers\Admin\UserController::class);
     Route::resource('roles', \App\Http\Controllers\Admin\RoleController::class);

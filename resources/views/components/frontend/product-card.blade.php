@@ -89,8 +89,21 @@
             <p class="text-xs text-gray-400 uppercase tracking-widest">{{ $category }}</p>
         </div>
         
+        @php
+            $hidePrices = \App\Models\Setting::get('hide_prices', 0);
+        @endphp
+        
         <div class="flex items-center justify-center gap-2 text-sm font-medium mt-3">
-             <span class="text-black">{{ $price }}</span>
+            @if($hidePrices)
+                <span class="text-primary uppercase text-xs font-bold tracking-widest">Price on Request</span>
+            @else
+                @if($product && $product->sale_price && $product->sale_price < $product->price)
+                    <span class="text-gray-400 line-through text-xs">₹{{ number_format($product->price) }}</span>
+                    <span class="text-red-600 font-bold">₹{{ number_format($product->sale_price) }}</span>
+                @else
+                    <span class="text-black">{{ $price }}</span>
+                @endif
+            @endif
         </div>
     </div>
 </div>

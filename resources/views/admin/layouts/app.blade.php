@@ -43,7 +43,7 @@
                             <span class="d-none d-md-inline">{{ auth()->user()->name ?? 'Admin' }}</span>
                         </a>
                         <div class="dropdown-menu dropdown-menu-lg dropdown-menu-end">
-                            <a href="#" class="dropdown-item">
+                            <a href="{{ route('admin.profile') }}" class="dropdown-item">
                                 <i class="bi bi-person me-2"></i> Profile
                             </a>
                             <div class="dropdown-divider"></div>
