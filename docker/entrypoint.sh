@@ -4,6 +4,7 @@
 php artisan config:cache
 php artisan route:cache
 php artisan view:cache
+php artisan storage:link
 
 # Run migrations (force for production)
 php artisan migrate --force
