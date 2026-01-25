@@ -2,9 +2,17 @@
     use App\Models\Setting;
     $showGoldPrices = Setting::get('show_gold_prices', 1);
     $showSilverPrices = Setting::get('show_silver_prices', 1);
-    $rateGold24k = Setting::get('rate_gold_24k', '76,500');
-    $rateGold22k = Setting::get('rate_gold_22k', '71,200');
-    $rateSilver = Setting::get('rate_silver', '92,500');
+    
+    // Helper to parse price
+    $parsePrice = function($key, $default) {
+        $value = Setting::get($key, $default);
+        // Remove commas and convert to float
+        return (float) str_replace(',', '', (string) $value);
+    };
+
+    $rateGold24k = $parsePrice('rate_gold_24k', '76500');
+    $rateGold22k = $parsePrice('rate_gold_22k', '71200');
+    $rateSilver = $parsePrice('rate_silver', '92500');
 @endphp
 
 <style>

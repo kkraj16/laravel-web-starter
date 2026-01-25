@@ -17,16 +17,7 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        Schema::create('banners', function (Blueprint $table) {
-            $table->id();
-            $table->string('title')->nullable();
-            $table->string('image_path');
-            $table->string('link_url')->nullable();
-            $table->string('position')->default('home_slider'); // home_slider, sidebar, promo
-            $table->integer('sort_order')->default(0);
-            $table->boolean('is_active')->default(true);
-            $table->timestamps();
-        });
+        // Banners creation removed (moved to dedicated migration)
         
         Schema::create('themes', function (Blueprint $table) {
             $table->id();
@@ -53,7 +44,6 @@ return new class extends Migration
     {
         Schema::dropIfExists('audit_logs');
         Schema::dropIfExists('themes');
-        Schema::dropIfExists('banners');
         Schema::dropIfExists('settings');
     }
 };
