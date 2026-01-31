@@ -88,7 +88,7 @@
                     </div>
                     <div class="relative z-10 text-center text-white px-4 max-w-4xl mx-auto mt-20" data-aos="fade-up">
                       
-                         <img src="{{ asset('images/banner/logo-text.png') }}" class="w-48 sm:w-56 md:w-72 lg:w-96 xl:w-[450px] mb-6 mx-auto object-contain drop-shadow-xl" alt="Banner Content">
+                         <img src="{{ asset('images/banner/logo-text.png') }}" class="w-64 sm:w-80 md:w-96 lg:w-[32rem] xl:w-[600px] mb-6 mx-auto object-contain drop-shadow-xl" alt="Banner Content">
                         <!-- <h1 class="font-serif text-5xl md:text-7xl lg:text-8xl mb-6 leading-tight">
                             Tradition <span class="text-primary italic">Redefined</span>
                         </h1> -->
