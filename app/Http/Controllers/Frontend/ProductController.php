@@ -124,6 +124,7 @@ class ProductController extends Controller
         $product = Product::where('slug', $slug)
             ->orWhere('id', $slug)
             ->where('is_active', true)
+            ->with(['categories', 'images'])
             ->firstOrFail();
 
         return view('themes.default.products.show', compact('product'));

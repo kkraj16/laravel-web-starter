@@ -33,7 +33,7 @@
                     </div>
 
                     <!-- Overlay -->
-                    <div class="absolute inset-0 bg-black pointer-events-none" style="opacity: {{ $banner->overlay_opacity }};"></div>
+                    <div class="absolute inset-0 bg-black pointer-events-none" style="opacity: {{ ($banner->overlay_opacity == 0.6) ? 0.2 : $banner->overlay_opacity }};"></div>
                     
                     <!-- Content -->
                     <!-- Content -->

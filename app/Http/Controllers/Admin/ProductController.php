@@ -55,7 +55,8 @@ class ProductController extends Controller
             'sale_discount' => 'nullable|numeric|min:0|max:100',
             'sku' => 'required|alpha_dash|unique:products,sku',
             'stock_status' => 'nullable|in:instock,outofstock,onbackorder',
-            'image' => 'required|image|mimes:jpeg,png,jpg,webp|max:2048',
+            'images' => 'nullable|array',
+            'images.*' => 'image|mimes:jpeg,png,jpg,webp|max:2048',
             'meta_title' => 'nullable|string|max:60',
             'meta_description' => 'nullable|string|max:160',
             'meta_keywords' => 'nullable|string|max:255',
@@ -63,7 +64,7 @@ class ProductController extends Controller
             'weight' => 'nullable|numeric|min:0',
         ]);
 
-        $data = $request->except(['image', 'categories', 'sale_discount']);
+        $data = $request->except(['images', 'categories', 'sale_discount']);
         $data['slug'] = Str::slug($request->name) . '-' . Str::random(4);
         $data['is_active'] = $request->has('is_active');
         $data['is_trending'] = $request->has('is_trending');
@@ -84,16 +85,23 @@ class ProductController extends Controller
         }
 
         // Handle Main Image
-        if ($request->hasFile('image')) {
-             $path = $request->file('image')->store('products', 'public');
-             $product->thumbnail = $path;
-             $product->save();
-             
-             ProductImage::create([
-                 'product_id' => $product->id,
-                 'image_path' => $path,
-                 'is_primary' => true
-             ]);
+        // Handle Images (Multiple)
+        if ($request->hasFile('images')) {
+            foreach($request->file('images') as $index => $file) {
+                $path = $file->store('products', 'public');
+                
+                // If it's the first image, set as thumbnail if not already set
+                if ($index === 0) {
+                    $product->thumbnail = $path;
+                    $product->save();
+                }
+
+                ProductImage::create([
+                    'product_id' => $product->id,
+                    'image_path' => $path,
+                    'is_primary' => ($index === 0)
+                ]);
+            }
         }
 
         // Handle Variants
@@ -124,7 +132,9 @@ class ProductController extends Controller
             'sale_discount' => 'nullable|numeric|min:0|max:100',
             'sku' => ['required', 'alpha_dash', Rule::unique('products')->ignore($product->id)],
             'stock_status' => 'nullable|in:instock,outofstock,onbackorder',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
+            'new_images' => 'nullable|array',
+            'new_images.*' => 'image|mimes:jpeg,png,jpg,webp|max:2048',
+            'delete_image_ids' => 'nullable|array',
             'meta_title' => 'nullable|string|max:60',
             'meta_description' => 'nullable|string|max:160',
             'meta_keywords' => 'nullable|string|max:255',
@@ -132,7 +142,7 @@ class ProductController extends Controller
             'weight' => 'nullable|numeric|min:0',
         ]);
 
-        $data = $request->except(['image', 'categories', 'sale_discount']);
+        $data = $request->except(['new_images', 'delete_image_ids', 'categories', 'sale_discount']);
         $data['is_active'] = $request->has('is_active');
         $data['is_trending'] = $request->has('is_trending');
         
@@ -150,20 +160,48 @@ class ProductController extends Controller
         }
 
         // Update Image
-        if ($request->hasFile('image')) {
-             if($product->thumbnail) {
-                 Storage::disk('public')->delete($product->thumbnail);
+        // Handle New Images
+        if ($request->hasFile('new_images')) {
+             foreach($request->file('new_images') as $file) {
+                $path = $file->store('products', 'public');
+                
+                // If product has no thumbnail, set this one
+                if (!$product->thumbnail) {
+                    $product->thumbnail = $path;
+                    $product->save();
+                }
+
+                ProductImage::create([
+                    'product_id' => $product->id,
+                    'image_path' => $path,
+                    'is_primary' => false
+                ]);
              }
-             $path = $request->file('image')->store('products', 'public');
-             $product->thumbnail = $path;
-             $product->save();
-             
-             $product->images()->where('is_primary', true)->delete();
-             ProductImage::create([
-                 'product_id' => $product->id,
-                 'image_path' => $path,
-                 'is_primary' => true
-             ]);
+        }
+
+        // Handle Image Deletion
+        if ($request->filled('delete_image_ids')) {
+            $imagesToDelete = ProductImage::whereIn('id', $request->delete_image_ids)
+                                          ->where('product_id', $product->id)
+                                          ->get();
+            
+            foreach($imagesToDelete as $img) {
+                // Determine if we need to update product thumbnail
+                $isThumbnail = ($product->thumbnail === $img->image_path);
+
+                Storage::disk('public')->delete($img->image_path);
+                $img->delete();
+
+                if ($isThumbnail) {
+                    $nextImage = $product->images()->first();
+                    $product->thumbnail = $nextImage ? $nextImage->image_path : null;
+                    $product->save();
+                    
+                    if($nextImage) {
+                        $nextImage->update(['is_primary' => true]);
+                    }
+                }
+            }
         }
         
          // Handle Variants (Update or Create)

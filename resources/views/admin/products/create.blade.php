@@ -54,25 +54,31 @@
                     <!-- Media Section -->
                     <div class="mb-5">
                         <h5 class="border-bottom pb-2 mb-4">
-                            <i class="bi bi-image text-primary me-2"></i>Media
+                            <i class="bi bi-images text-primary me-2"></i>Product Gallery
                         </h5>
+                        <div class="alert alert-info py-2">
+                             <i class="bi bi-info-circle me-2"></i>The first selected image will automatically become the main thumbnail.
+                        </div>
                         <div class="row">
-                            <div class="col-md-6">
-                                <label class="form-label fw-bold">Thumbnail <span class="text-danger">*</span></label>
+                            <div class="col-md-12">
+                                <label class="form-label fw-bold">Product Images <span class="text-danger">*</span></label>
                                 <div class="image-upload-zone p-4 border border-2 border-dashed rounded text-center position-relative bg-light" id="dropZone" style="min-height: 250px;">
                                     <div class="default-view" id="defaultView">
                                         <i class="bi bi-cloud-arrow-up fs-1 text-primary mb-3 d-block"></i>
-                                        <p class="mb-1 fw-bold">Drag & drop image here</p>
+                                        <p class="mb-1 fw-bold">Drag & drop images here</p>
                                         <p class="text-muted small">or click to browse</p>
                                         <p class="text-muted small">Recommended: 800x1000px, JPG or PNG</p>
-                                        <input type="file" name="image" class="form-control position-absolute top-0 start-0 w-100 h-100 opacity-0" id="imageInput" accept="image/*" style="cursor: pointer;" required>
+                                        <input type="file" name="images[]" class="form-control position-absolute top-0 start-0 w-100 h-100 opacity-0" id="imageInput" accept="image/*" multiple style="cursor: pointer;" required>
                                     </div>
                                     <div class="preview-view d-none" id="previewView">
-                                        <img src="" id="imagePreview" class="img-fluid rounded border mb-3" style="max-height: 200px;">
-                                        <br>
-                                        <button type="button" class="btn btn-sm btn-danger" id="removeImageBtn">
-                                            <i class="bi bi-trash"></i> Remove Image
-                                        </button>
+                                        <div class="d-flex flex-wrap gap-3 justify-content-center" id="imagePreviewContainer">
+                                            <!-- Previews will be inserted here -->
+                                        </div>
+                                        <div class="mt-3">
+                                            <button type="button" class="btn btn-sm btn-danger" id="removeImageBtn">
+                                                <i class="bi bi-trash"></i> Clear Selection
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -209,19 +215,29 @@ document.addEventListener('DOMContentLoaded', function() {
     const imageInput = document.getElementById('imageInput');
     const defaultView = document.getElementById('defaultView');
     const previewView = document.getElementById('previewView');
-    const imagePreview = document.getElementById('imagePreview');
+    const imagePreviewContainer = document.getElementById('imagePreviewContainer');
     const removeImageBtn = document.getElementById('removeImageBtn');
 
     imageInput.addEventListener('change', function(e) {
-        const file = this.files[0];
-        if(file) {
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                imagePreview.src = e.target.result;
-                defaultView.classList.add('d-none');
-                previewView.classList.remove('d-none');
-            }
-            reader.readAsDataURL(file);
+        const files = this.files;
+        if(files.length > 0) {
+            imagePreviewContainer.innerHTML = ''; // Clear existing
+            defaultView.classList.add('d-none');
+            previewView.classList.remove('d-none');
+
+            Array.from(files).forEach((file, index) => {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const imgDiv = document.createElement('div');
+                    imgDiv.className = 'position-relative';
+                    imgDiv.innerHTML = `
+                        <img src="${e.target.result}" class="img-thumbnail" style="width: 120px; height: 120px; object-fit: cover;">
+                        ${index === 0 ? '<span class="position-absolute top-0 start-50 translate-middle-x badge bg-primary" style="font-size: 0.65rem;">Cover</span>' : ''}
+                    `;
+                    imagePreviewContainer.appendChild(imgDiv);
+                }
+                reader.readAsDataURL(file);
+            });
         }
     });
 
@@ -243,7 +259,7 @@ document.addEventListener('DOMContentLoaded', function() {
         imageInput.value = '';
         defaultView.classList.remove('d-none');
         previewView.classList.add('d-none');
-        imagePreview.src = '';
+        imagePreviewContainer.innerHTML = '';
     });
 
     // Price Calculation

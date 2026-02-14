@@ -76,7 +76,7 @@
     <!-- Overlay Opacity -->
     <div class="col-md-3">
         <label class="form-label fw-bold">Overlay Opacity (0.0 - 1.0)</label>
-        <input type="number" step="0.1" min="0" max="1" name="overlay_opacity" class="form-control" value="{{ old('overlay_opacity', $banner->overlay_opacity ?? 0.6) }}">
+        <input type="number" step="0.1" min="0" max="1" name="overlay_opacity" class="form-control" value="{{ old('overlay_opacity', $banner->overlay_opacity ?? 0.2) }}">
     </div>
 
     <!-- Zoom Animation -->

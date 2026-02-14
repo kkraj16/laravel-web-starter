@@ -55,25 +55,55 @@
                     <!-- Media Section -->
                     <div class="mb-5">
                         <h5 class="border-bottom pb-2 mb-4">
-                            <i class="bi bi-image text-warning me-2"></i>Media
+                            <i class="bi bi-images text-warning me-2"></i>Media Gallery
                         </h5>
+                        
+                        <!-- Existing Images -->
+                        <div class="mb-4">
+                            <label class="form-label fw-bold">Current Images</label>
+                            @if($product->images->count() > 0)
+                                <div class="row g-3">
+                                    @foreach($product->images as $image)
+                                        <div class="col-6 col-md-3 col-lg-2">
+                                            <div class="card h-100 border {{ $image->is_primary ? 'border-primary border-2' : '' }}">
+                                                <img src="{{ asset('storage/' . $image->image_path) }}" class="card-img-top" style="height: 120px; object-fit: cover;">
+                                                <div class="card-body p-2 text-center">
+                                                    @if($image->is_primary)
+                                                        <span class="badge bg-primary mb-2">Cover</span>
+                                                    @else
+                                                        <div class="form-check form-check-inline">
+                                                            <input class="form-check-input bg-danger border-danger" type="checkbox" name="delete_image_ids[]" value="{{ $image->id }}" id="del_{{ $image->id }}">
+                                                            <label class="form-check-label text-danger small fw-bold" for="del_{{ $image->id }}">Delete</label>
+                                                        </div>
+                                                    @endif
+                                                </div>
+                                            </div>
+                                        </div>
+                                    @endforeach
+                                </div>
+                            @else
+                                <div class="alert alert-warning">No images uploaded for this product.</div>
+                            @endif
+                        </div>
+
+                        <!-- Add New Images -->
                         <div class="row">
-                            <div class="col-md-6">
-                                <label class="form-label fw-bold">Thumbnail</label>
-                                <div class="image-upload-zone p-4 border border-2 border-dashed rounded text-center position-relative bg-light" id="dropZone" style="min-height: 250px;">
-                                    <div class="default-view {{ $product->thumbnail ? 'd-none' : '' }}" id="defaultView">
-                                        <i class="bi bi-cloud-arrow-up fs-1 text-warning mb-3 d-block"></i>
-                                        <p class="mb-1 fw-bold">Drag & drop image here</p>
+                            <div class="col-md-8">
+                                <label class="form-label fw-bold">Add New Images</label>
+                                <div class="image-upload-zone p-4 border border-2 border-dashed rounded text-center position-relative bg-light" id="dropZone" style="min-height: 200px;">
+                                    <div class="default-view" id="defaultView">
+                                        <i class="bi bi-cloud-plus fs-1 text-secondary mb-3 d-block"></i>
+                                        <p class="mb-1 fw-bold">Drag & drop new images here</p>
                                         <p class="text-muted small">or click to browse</p>
-                                        <p class="text-muted small">Recommended: 800x1000px, JPG or PNG</p>
-                                        <input type="file" name="image" class="form-control position-absolute top-0 start-0 w-100 h-100 opacity-0" id="imageInput" accept="image/*" style="cursor: pointer;">
+                                        <input type="file" name="new_images[]" class="form-control position-absolute top-0 start-0 w-100 h-100 opacity-0" id="imageInput" accept="image/*" multiple style="cursor: pointer;">
                                     </div>
-                                    <div class="preview-view {{ $product->thumbnail ? '' : 'd-none' }}" id="previewView">
-                                        <img src="{{ $product->thumbnail ? asset('storage/' . $product->thumbnail) : '' }}" id="imagePreview" class="img-fluid rounded border mb-3" style="max-height: 200px;">
-                                        <br>
-                                        <button type="button" class="btn btn-sm btn-danger" id="removeImageBtn">
-                                            <i class="bi bi-trash"></i> Remove Image
-                                        </button>
+                                    <div class="preview-view d-none" id="previewView">
+                                        <div class="d-flex flex-wrap gap-3 justify-content-center" id="imagePreviewContainer"></div>
+                                        <div class="mt-3">
+                                            <button type="button" class="btn btn-sm btn-danger" id="removeImageBtn">
+                                                <i class="bi bi-x-circle"></i> Clear Selection
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -217,41 +247,51 @@ document.addEventListener('DOMContentLoaded', function() {
     const imageInput = document.getElementById('imageInput');
     const defaultView = document.getElementById('defaultView');
     const previewView = document.getElementById('previewView');
-    const imagePreview = document.getElementById('imagePreview');
+    const imagePreviewContainer = document.getElementById('imagePreviewContainer');
     const removeImageBtn = document.getElementById('removeImageBtn');
 
     imageInput.addEventListener('change', function(e) {
-        const file = this.files[0];
-        if(file) {
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                imagePreview.src = e.target.result;
-                defaultView.classList.add('d-none');
-                previewView.classList.remove('d-none');
-            }
-            reader.readAsDataURL(file);
+        const files = this.files;
+        if(files.length > 0) {
+            imagePreviewContainer.innerHTML = ''; // Clear existing
+            defaultView.classList.add('d-none');
+            previewView.classList.remove('d-none');
+
+            Array.from(files).forEach((file, index) => {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const imgDiv = document.createElement('div');
+                    imgDiv.className = 'position-relative';
+                    imgDiv.innerHTML = `
+                         <img src="${e.target.result}" class="img-thumbnail" style="width: 100px; height: 100px; object-fit: cover;">
+                         <span class="position-absolute bottom-0 start-50 translate-middle-x badge bg-success" style="font-size: 0.6rem;">New</span>
+                    `;
+                    imagePreviewContainer.appendChild(imgDiv);
+                }
+                reader.readAsDataURL(file);
+            });
         }
     });
 
     dropZone.addEventListener('dragover', (e) => {
         e.preventDefault();
-        dropZone.classList.add('border-warning');
+        dropZone.classList.add('border-primary');
     });
     
     dropZone.addEventListener('dragleave', () => {
-        dropZone.classList.remove('border-warning');
+        dropZone.classList.remove('border-primary');
     });
     
     dropZone.addEventListener('drop', (e) => {
         e.preventDefault();
-        dropZone.classList.remove('border-warning');
+        dropZone.classList.remove('border-primary');
     });
 
     removeImageBtn.addEventListener('click', function() {
         imageInput.value = '';
         defaultView.classList.remove('d-none');
         previewView.classList.add('d-none');
-        imagePreview.src = '';
+        imagePreviewContainer.innerHTML = '';
     });
 
     // Price Calculation
