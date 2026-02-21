@@ -39,5 +39,11 @@ Route::get('/', function () {
 Route::get('/collections', [\App\Http\Controllers\Frontend\ProductController::class, 'index'])->name('products.index');
 Route::get('/product/{slug}', [\App\Http\Controllers\Frontend\ProductController::class, 'show'])->name('products.show');
 
+// Short URL for product sharing (QR codes, WhatsApp, etc.)
+Route::get('/p/{id}', function ($id) {
+    $product = \App\Models\Product::findOrFail($id);
+    return redirect()->route('products.show', $product->slug);
+})->name('products.short')->where('id', '[0-9]+');
+
 Route::get('/about', [\App\Http\Controllers\Frontend\PageController::class, 'about'])->name('about');
 Route::get('/contact', [\App\Http\Controllers\Frontend\PageController::class, 'contact'])->name('contact');

@@ -14,11 +14,13 @@ class RolePermissionSeeder extends Seeder
         // Reset cached roles and permissions
         app()[\Illuminate\Cache\CacheManager::class]->forget('spatie.permission.cache');
 
-        // Create Permissions
+        // Define Permissions
         $modules = [
-            'product', 'category', 'order', 'customer', 'review', 'banner', 'user', 'role', 'settings'
+            'product', 'category', 'order', 'customer',
+            'review', 'banner', 'testimonial', 'user',
+            'role', 'settings',
         ];
-        
+
         $actions = ['view', 'create', 'edit', 'delete'];
 
         $permissions = [];
@@ -28,7 +30,7 @@ class RolePermissionSeeder extends Seeder
             }
         }
 
-        // Additional specific permissions
+        // Additional permissions
         $permissions[] = 'dashboard.view';
         $permissions[] = 'media.upload';
 
@@ -36,40 +38,38 @@ class RolePermissionSeeder extends Seeder
             Permission::firstOrCreate(['name' => $permission]);
         }
 
-        // Create Roles and Assign Permissions
-        
-        // Super Admin
-        $superAdmin = Role::create(['name' => 'Super Admin']);
-        // Super Admin gets all permissions bypass logic usually, but we can also assign all
-        $allPermissions = Permission::all();
-        $superAdmin->permissions()->sync($allPermissions);
+        // Create Roles (idempotent)
+        $superAdmin = Role::firstOrCreate(['name' => 'Super Admin']);
+        $admin      = Role::firstOrCreate(['name' => 'Admin']);
+        $manager    = Role::firstOrCreate(['name' => 'Manager']);
+        Role::firstOrCreate(['name' => 'Customer']);
 
-        // Manager
-        $manager = Role::create(['name' => 'Manager']);
-        $managerPermissions = Permission::whereIn('group_name', ['product', 'category', 'order', 'review', 'banner'])
-                                       ->orWhere('name', 'dashboard.view')
-                                       ->get();
-        // Since we didn't set group_name in the loop above, let's filter by name
-        // Ideally we should have set group_name. Let's rely on name filtering.
-        $managerPermissions = Permission::where(function($query) {
-            $query->where('name', 'like', 'product.%')
-                  ->orWhere('name', 'like', 'category.%')
-                  ->orWhere('name', 'like', 'order.%')
-                  ->orWhere('name', 'like', 'review.%')
-                  ->orWhere('name', 'like', 'banner.%')
-                  ->orWhere('name', 'dashboard.view');
-        })->get();
-        
-        $manager->permissions()->sync($managerPermissions);
+        // Assign Permissions
 
-        // Admin (below Super Admin, maybe no Settings/Role access?)
-        $admin = Role::create(['name' => 'Admin']);
-        $adminPermissions = Permission::where('name', 'not like', 'role.%')
-                                      ->where('name', '!=', 'settings.delete') // Example restriction
-                                      ->get();
-        $admin->permissions()->sync($adminPermissions);
+        // Super Admin → ALL permissions
+        $superAdmin->permissions()->sync(Permission::all());
 
-        // Customer
-        Role::create(['name' => 'Customer']);
+        // Admin → Everything except role management and settings.delete
+        $admin->permissions()->sync(
+            Permission::where('name', 'not like', 'role.%')
+                      ->where('name', '!=', 'settings.delete')
+                      ->get()
+        );
+
+        // Manager → Products, Categories, Orders, Reviews, Banners, Testimonials + Dashboard
+        $manager->permissions()->sync(
+            Permission::where(function ($query) {
+                $query->where('name', 'like', 'product.%')
+                      ->orWhere('name', 'like', 'category.%')
+                      ->orWhere('name', 'like', 'order.%')
+                      ->orWhere('name', 'like', 'review.%')
+                      ->orWhere('name', 'like', 'banner.%')
+                      ->orWhere('name', 'like', 'testimonial.%')
+                      ->orWhere('name', '=', 'dashboard.view')
+                      ->orWhere('name', '=', 'media.upload');
+            })->get()
+        );
+
+        // Customer → No admin permissions (role only, no panel access)
     }
 }

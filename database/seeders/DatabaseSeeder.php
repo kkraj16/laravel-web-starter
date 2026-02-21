@@ -12,22 +12,24 @@ class DatabaseSeeder extends Seeder
 
     /**
      * Seed the application's database.
+     *
+     * All seeders are idempotent (safe to re-run).
+     * Order matters: Roles → Users → Settings → Categories → Testimonials.
      */
     public function run(): void
     {
-        // Essential Production Seeders
         $this->call([
-            RolePermissionSeeder::class,
-            UserSeeder::class,
-            SettingsSeeder::class,
-            CategorySeeder::class, // Defaults (Gold, Silver, etc.)
+            RolePermissionSeeder::class,  // Roles & Permissions (required first)
+            UserSeeder::class,            // Admin account
+            SettingsSeeder::class,        // Site configuration defaults
+            CategorySeeder::class,        // Product categories
+            TestimonialSeeder::class,     // Initial testimonials
         ]);
 
-        // Optional / Demo Data (Skip in Production)
+        // Dev / Demo seeders — only run in local or testing
         if (app()->isLocal() || app()->runningUnitTests()) {
             $this->call([
                 DemoDataSeeder::class,
-                // ProductSqlSeeder::class, // Uncomment if you have a SQL dump seeder
             ]);
         }
     }

@@ -68,7 +68,7 @@
                                     data-product-name="{{ $product->name }}"
                                     data-product-sku="{{ $product->sku ?? 'N/A' }}"
                                     data-product-price="₹{{ number_format($product->price, 0) }}"
-                                    data-product-url="{{ route('products.show', $product->slug) }}"
+                                    data-product-url="{{ route('products.short', $product->id) }}"
                                     data-whatsapp-number="{{ \App\Models\Setting::get('contact_whatsapp') ?? '919928154903' }}"
                                 >
                                     <i class="bi bi-whatsapp text-green-500"></i> Inquire

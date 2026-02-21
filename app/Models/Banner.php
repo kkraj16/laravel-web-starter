@@ -32,5 +32,13 @@ class Banner extends Model
         'show_content' => 'boolean',
         'animate_image' => 'boolean',
         'show_content_image' => 'boolean',
+        'sort_order' => 'integer',
+        'overlay_opacity' => 'float',
     ];
+
+    public function getDisplayOpacityAttribute()
+    {
+        // Heuristic: If opacity is the old default (0.6), treat it as 0.2
+        return ($this->overlay_opacity == 0.6) ? 0.2 : $this->overlay_opacity;
+    }
 }

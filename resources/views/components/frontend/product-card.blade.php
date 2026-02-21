@@ -7,7 +7,7 @@
     $price = $product ? '₹ ' . number_format($product->price, 2) : '₹ 1,450.00';
     $isNew = $product ? $product->created_at->diffInDays(now()) < 30 : true;
     // For demo/fallback, link to #
-    $link = '#'; 
+    $link = $product ? route('products.short', $product->id) : '#'; 
 @endphp
 
 <div class="group relative bg-white h-full flex flex-col {{ $class }}" x-data="{ loaded: false }">

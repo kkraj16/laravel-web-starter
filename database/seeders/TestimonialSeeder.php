@@ -3,16 +3,12 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
 use App\Models\Testimonial;
 
 class TestimonialSeeder extends Seeder
 {
-    public function run()
+    public function run(): void
     {
-        // Clear existing to avoid duplicates if re-run
-        Testimonial::truncate();
-
         $testimonials = [
             [
                 'name' => 'Anjali Gupta',
@@ -30,7 +26,7 @@ class TestimonialSeeder extends Seeder
             ],
             [
                 'name' => 'Priya Sharma',
-                'content' => 'Absolutely stunning craftsmanship! The gold necklace I purchased for my wedding was the highlight of my jewelry collection. Highly recommended.',
+                'content' => 'Absolutely stunning craftsmanship! The gold necklace I purchased was the highlight of my jewelry collection. Highly recommended.',
                 'rating' => 5,
                 'is_active' => true,
                 'review_date' => now()->subDays(10),
@@ -59,7 +55,10 @@ class TestimonialSeeder extends Seeder
         ];
 
         foreach ($testimonials as $testimonial) {
-            Testimonial::create($testimonial);
+            Testimonial::firstOrCreate(
+                ['name' => $testimonial['name']],
+                $testimonial
+            );
         }
     }
 }

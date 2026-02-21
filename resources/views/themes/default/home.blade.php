@@ -3,7 +3,6 @@
 @section('content')
 
     <!-- Hero Section -->
-    <!-- Hero Section -->
     <x-frontend.hero :banners="$banners" />
 
     <!-- Trending Masterpieces -->
