@@ -35,6 +35,19 @@
                             <input type="text" name="map_coordinates" class="form-control" value="{{ $settings['map_coordinates'] ?? '' }}" placeholder="25.777, 73.243">
                         </div>
 
+                        <div class="col-md-4">
+                            <label class="form-label text-uppercase fs-7 fw-bold text-muted">Facebook URL</label>
+                            <input type="text" name="social_facebook" class="form-control" value="{{ $settings['social_facebook'] ?? '' }}" placeholder="https://facebook.com/...">
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label text-uppercase fs-7 fw-bold text-muted">Instagram URL</label>
+                            <input type="text" name="social_instagram" class="form-control" value="{{ $settings['social_instagram'] ?? '' }}" placeholder="https://instagram.com/...">
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label text-uppercase fs-7 fw-bold text-muted">Twitter (X) URL</label>
+                            <input type="text" name="social_twitter" class="form-control" value="{{ $settings['social_twitter'] ?? '' }}" placeholder="https://twitter.com/...">
+                        </div>
+
                         <div class="col-12">
                             <label class="form-label text-uppercase fs-7 fw-bold text-muted">Full Boutique Address</label>
                             <textarea name="contact_address" class="form-control" rows="2">{{ $settings['contact_address'] ?? '' }}</textarea>

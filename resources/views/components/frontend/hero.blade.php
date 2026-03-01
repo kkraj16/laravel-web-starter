@@ -89,16 +89,16 @@
                     <div class="relative z-10 text-center text-white px-4 max-w-4xl mx-auto mt-20" data-aos="fade-up">
                       
                          <img src="{{ asset('images/banner/logo-text.png') }}" class="w-64 sm:w-80 md:w-96 lg:w-[32rem] xl:w-[600px] mb-6 mx-auto object-contain drop-shadow-xl" alt="Banner Content">
-                        <!-- <h1 class="font-serif text-5xl md:text-7xl lg:text-8xl mb-6 leading-tight">
+                        <h1 class="font-serif text-5xl md:text-7xl lg:text-8xl mb-6 leading-tight">
                             Tradition <span class="text-primary italic">Redefined</span>
-                        </h1> -->
-                        <!-- <p class="text-gray-300 mb-10 text-sm md:text-base tracking-wide max-w-xl mx-auto leading-relaxed">
+                        </h1>
+                        <p class="text-gray-300 mb-10 text-sm md:text-base tracking-wide max-w-xl mx-auto leading-relaxed">
                             Discover a legacy of craftsmanship and purity.
-                        </p> -->
+                        </p>
                         <div class="flex flex-col items-center gap-6 mb-4">
-                            <p class="inline-block py-1 px-3 border border-primary/50 text-action-gold tracking-[0.2em] text-[10px] uppercase rounded-full backdrop-blur-sm">
+                            <!-- <p class="inline-block py-1 px-3 border border-primary/50 text-action-gold tracking-[0.2em] text-[10px] uppercase rounded-full backdrop-blur-sm">
                                 Discover a legacy of craftsmanship and purity.
-                            </p>
+                            </p> -->
                             <a href="{{ route('products.index') }}" class="inline-block bg-primary text-black px-8 py-3.5 text-xs font-bold tracking-[0.2em] uppercase hover:bg-white transition-all duration-300 transform hover:-translate-y-1 shadow-[0_0_20px_rgba(200,155,60,0.3)]">
                                 Explore Collection
                             </a>

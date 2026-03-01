@@ -62,7 +62,7 @@
                 <tr>
                     <td>
                         @if($product->primary_image)
-                            <img src="{{ $product->primary_image }}" class="rounded border" style="width: 60px; height: 60px; object-fit: cover;" alt="{{ $product->name }}" onerror="this.outerHTML='<div class=\"rounded border d-flex align-items-center justify-content-center bg-light\" style=\"width: 60px; height: 60px;\"><i class=\"bi bi-card-image text-muted\" style=\"font-size: 1.5rem;\"></i></div>'">
+                            <img src="{{ $product->primary_image }}" class="rounded border" style="width: 60px; height: 60px; object-fit: cover;" alt="{{ $product->name }}" onerror="this.outerHTML='<div class=\'rounded border d-flex align-items-center justify-content-center bg-light\' style=\'width: 60px; height: 60px;\'><i class=\'bi bi-card-image text-muted\' style=\'font-size: 1.5rem;\'></i></div>'">
                         @else
                             <div class="rounded border d-flex align-items-center justify-content-center bg-light" style="width: 60px; height: 60px;">
                                 <i class="bi bi-card-image text-muted" style="font-size: 1.5rem;"></i>

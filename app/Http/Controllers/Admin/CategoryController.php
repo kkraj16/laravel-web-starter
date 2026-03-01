@@ -55,7 +55,12 @@ class CategoryController extends Controller
              $data['image'] = $path;
         }
 
-        Category::create($data);
+        $category = Category::create($data);
+
+        // Handle SEO Data
+        if ($request->has('seo')) {
+            $category->seoMeta()->create($request->input('seo'));
+        }
 
         return redirect()->route('admin.categories.index')->with('success', 'Category created successfully.');
     }
@@ -117,6 +122,11 @@ class CategoryController extends Controller
         }
 
         $category->update($data);
+
+        // Handle SEO Data
+        if ($request->has('seo')) {
+            $category->seoMeta()->updateOrCreate([], $request->input('seo'));
+        }
 
         return redirect()->route('admin.categories.index')->with('success', 'Category updated successfully.');
     }

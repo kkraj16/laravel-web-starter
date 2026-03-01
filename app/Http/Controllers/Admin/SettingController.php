@@ -44,6 +44,19 @@ class SettingController extends Controller
 
     public function update(Request $request)
     {
+        // Handle Page-specific SEO updates
+        if ($request->has('page_seo')) {
+            $page = $request->page_seo;
+            $seoData = $request->input('seo', []);
+            
+            \App\Models\SeoMeta::updateOrCreate(
+                ['route_name' => $page],
+                array_merge($seoData, ['page_path' => $page == 'home' ? '/' : '/' . $page])
+            );
+
+            return redirect()->back()->with('success', ucfirst($page) . ' SEO updated successfully.');
+        }
+
         $data = $request->except(['_token', '_method']);
 
         // Handle Checkboxes (boolean fields)

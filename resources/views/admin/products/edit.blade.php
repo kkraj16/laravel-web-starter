@@ -58,24 +58,31 @@
                             <i class="bi bi-images text-warning me-2"></i>Media Gallery
                         </h5>
                         
+                        <input type="hidden" name="primary_type" id="primaryType" value="existing">
+                        <input type="hidden" name="primary_image_id" id="primaryImageId" value="{{ $product->images->where('is_primary', true)->first()->id ?? '' }}">
+                        <input type="hidden" name="primary_image_index" id="primaryImageIndex" value="">
+
                         <!-- Existing Images -->
                         <div class="mb-4">
                             <label class="form-label fw-bold">Current Images</label>
                             @if($product->images->count() > 0)
-                                <div class="row g-3">
+                                <div class="row g-3" id="existingImagesContainer">
                                     @foreach($product->images as $image)
                                         <div class="col-6 col-md-3 col-lg-2">
-                                            <div class="card h-100 border {{ $image->is_primary ? 'border-primary border-2' : '' }}">
+                                            <div class="card h-100 preview-card border-0 shadow-sm position-relative overflow-hidden {{ $image->is_primary ? 'ring-primary' : '' }}" id="existing_card_{{ $image->id }}">
                                                 <img src="{{ asset('storage/' . $image->image_path) }}" class="card-img-top" style="height: 120px; object-fit: cover;">
-                                                <div class="card-body p-2 text-center">
-                                                    @if($image->is_primary)
-                                                        <span class="badge bg-primary mb-2">Cover</span>
-                                                    @else
-                                                        <div class="form-check form-check-inline">
-                                                            <input class="form-check-input bg-danger border-danger" type="checkbox" name="delete_image_ids[]" value="{{ $image->id }}" id="del_{{ $image->id }}">
-                                                            <label class="form-check-label text-danger small fw-bold" for="del_{{ $image->id }}">Delete</label>
+                                                <div class="card-img-overlay d-flex flex-column justify-content-between p-2">
+                                                    <div class="text-end">
+                                                        <button type="button" class="btn btn-sm {{ $image->is_primary ? 'btn-primary' : 'btn-dark opacity-75' }} primary-btn" onclick="setExistingAsPrimary({{ $image->id }}, this)">
+                                                            {{ $image->is_primary ? 'Cover' : 'Make Cover' }}
+                                                        </button>
+                                                    </div>
+                                                    <div class="text-start">
+                                                        <div class="form-check">
+                                                            <input class="form-check-input bg-danger border-danger" type="checkbox" name="delete_image_ids[]" value="{{ $image->id }}" id="del_{{ $image->id }}" onchange="handleDeleteCheck({{ $image->id }}, this)">
+                                                            <label class="form-check-label text-white small fw-bold" for="del_{{ $image->id }}" style="text-shadow: 0 0 3px rgba(0,0,0,0.8)">Delete</label>
                                                         </div>
-                                                    @endif
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -88,7 +95,7 @@
 
                         <!-- Add New Images -->
                         <div class="row">
-                            <div class="col-md-8">
+                            <div class="col-md-12">
                                 <label class="form-label fw-bold">Add New Images</label>
                                 <div class="image-upload-zone p-4 border border-2 border-dashed rounded text-center position-relative bg-light" id="dropZone" style="min-height: 200px;">
                                     <div class="default-view" id="defaultView">
@@ -98,11 +105,12 @@
                                         <input type="file" name="new_images[]" class="form-control position-absolute top-0 start-0 w-100 h-100 opacity-0" id="imageInput" accept="image/*" multiple style="cursor: pointer;">
                                     </div>
                                     <div class="preview-view d-none" id="previewView">
-                                        <div class="d-flex flex-wrap gap-3 justify-content-center" id="imagePreviewContainer"></div>
-                                        <div class="mt-3">
-                                            <button type="button" class="btn btn-sm btn-danger" id="removeImageBtn">
-                                                <i class="bi bi-x-circle"></i> Clear Selection
+                                        <div class="row g-3 justify-content-center" id="imagePreviewContainer"></div>
+                                        <div class="mt-4 pt-3 border-top text-center">
+                                            <button type="button" class="btn btn-sm btn-outline-danger" id="removeImageBtn">
+                                                <i class="bi bi-x-circle"></i> Clear New Selections
                                             </button>
+                                            <small class="text-muted ms-3"><i class="bi bi-info-circle me-1"></i>You can also select a new image as cover</small>
                                         </div>
                                     </div>
                                 </div>
@@ -200,29 +208,7 @@
                     </div>
 
                     <!-- SEO Settings Section -->
-                    <div class="mb-3">
-                        <h5 class="border-bottom pb-2 mb-4">
-                            <i class="bi bi-search text-warning me-2"></i>SEO Settings
-                            <small class="text-muted fw-normal">(Optional but recommended)</small>
-                        </h5>
-                        <div class="row g-3">
-                            <div class="col-md-6">
-                                <label class="form-label fw-bold">Meta Title</label>
-                                <input type="text" name="meta_title" class="form-control" maxlength="60" value="{{ $product->meta_title }}" placeholder="SEO-friendly title">
-                                <small class="text-muted">Max 60 characters for best results</small>
-                            </div>
-                            <div class="col-md-6">
-                                <label class="form-label fw-bold">Meta Keywords</label>
-                                <input type="text" name="meta_keywords" class="form-control" value="{{ $product->meta_keywords }}" placeholder="gold, necklace, jewelry">
-                                <small class="text-muted">Comma-separated keywords</small>
-                            </div>
-                            <div class="col-md-12">
-                                <label class="form-label fw-bold">Meta Description</label>
-                                <textarea name="meta_description" class="form-control" rows="2" maxlength="160" placeholder="Brief description for search engines">{{ $product->meta_description }}</textarea>
-                                <small class="text-muted">Max 160 characters recommended</small>
-                            </div>
-                        </div>
-                    </div>
+                    @include('admin.partials._seo_fields', ['model' => $product])
 
                 </div>
                 
@@ -260,18 +246,91 @@ document.addEventListener('DOMContentLoaded', function() {
             Array.from(files).forEach((file, index) => {
                 const reader = new FileReader();
                 reader.onload = function(e) {
-                    const imgDiv = document.createElement('div');
-                    imgDiv.className = 'position-relative';
-                    imgDiv.innerHTML = `
-                         <img src="${e.target.result}" class="img-thumbnail" style="width: 100px; height: 100px; object-fit: cover;">
-                         <span class="position-absolute bottom-0 start-50 translate-middle-x badge bg-success" style="font-size: 0.6rem;">New</span>
+                    const col = document.createElement('div');
+                    col.className = 'col-6 col-md-3 col-lg-2';
+                    col.innerHTML = `
+                         <div class="card h-100 preview-card-new border-0 shadow-sm position-relative overflow-hidden" data-index="${index}" onclick="setNewAsPrimary(${index}, this)">
+                            <img src="${e.target.result}" class="card-img-top" style="height: 120px; object-fit: cover;">
+                            <div class="card-img-overlay d-flex flex-column justify-content-between p-2">
+                                <div class="text-end">
+                                    <span class="badge bg-dark opacity-75 primary-badge">Make Cover</span>
+                                </div>
+                                <div class="text-start">
+                                    <span class="badge bg-success" style="font-size: 0.6rem;">New</span>
+                                </div>
+                            </div>
+                        </div>
                     `;
-                    imagePreviewContainer.appendChild(imgDiv);
+                    imagePreviewContainer.appendChild(col);
                 }
                 reader.readAsDataURL(file);
             });
         }
     });
+
+    window.setExistingAsPrimary = function(id, element) {
+        document.getElementById('primaryType').value = 'existing';
+        document.getElementById('primaryImageId').value = id;
+        document.getElementById('primaryImageIndex').value = '';
+
+        clearAllPrimaryStates();
+        
+        const card = document.getElementById(`existing_card_${id}`);
+        card.classList.add('ring-primary');
+        const btn = card.querySelector('.primary-btn');
+        btn.classList.remove('btn-dark', 'opacity-75');
+        btn.classList.add('btn-primary');
+        btn.innerText = 'Cover';
+    };
+
+    window.setNewAsPrimary = function(index, element) {
+        document.getElementById('primaryType').value = 'new';
+        document.getElementById('primaryImageId').value = '';
+        document.getElementById('primaryImageIndex').value = index;
+
+        clearAllPrimaryStates();
+
+        element.classList.add('ring-primary');
+        const badge = element.querySelector('.primary-badge');
+        badge.classList.remove('bg-dark', 'opacity-75');
+        badge.classList.add('bg-primary');
+        badge.innerText = 'Cover';
+    };
+
+    function clearAllPrimaryStates() {
+        // Clear existing
+        document.querySelectorAll('#existingImagesContainer .preview-card').forEach(card => {
+            card.classList.remove('ring-primary');
+            const btn = card.querySelector('.primary-btn');
+            if (btn) {
+                btn.classList.remove('btn-primary');
+                btn.classList.add('btn-dark', 'opacity-75');
+                btn.innerText = 'Make Cover';
+            }
+        });
+
+        // Clear new
+        document.querySelectorAll('#imagePreviewContainer .preview-card-new').forEach(card => {
+            card.classList.remove('ring-primary');
+            const badge = card.querySelector('.primary-badge');
+            if (badge) {
+                badge.classList.remove('bg-primary');
+                badge.classList.add('bg-dark', 'opacity-75');
+                badge.innerText = 'Make Cover';
+            }
+        });
+    }
+
+    window.handleDeleteCheck = function(id, checkbox) {
+        const card = document.getElementById(`existing_card_${id}`);
+        if (checkbox.checked) {
+            card.classList.add('opacity-50');
+            card.style.filter = 'grayscale(1)';
+        } else {
+            card.classList.remove('opacity-50');
+            card.style.filter = 'none';
+        }
+    };
 
     dropZone.addEventListener('dragover', (e) => {
         e.preventDefault();

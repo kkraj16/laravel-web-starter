@@ -87,11 +87,13 @@ class ProductController extends Controller
         // Handle Main Image
         // Handle Images (Multiple)
         if ($request->hasFile('images')) {
+            $primaryIndex = $request->input('primary_image_index', 0);
+            
             foreach($request->file('images') as $index => $file) {
                 $path = $file->store('products', 'public');
+                $isPrimary = ($index == $primaryIndex);
                 
-                // If it's the first image, set as thumbnail if not already set
-                if ($index === 0) {
+                if ($isPrimary) {
                     $product->thumbnail = $path;
                     $product->save();
                 }
@@ -99,18 +101,14 @@ class ProductController extends Controller
                 ProductImage::create([
                     'product_id' => $product->id,
                     'image_path' => $path,
-                    'is_primary' => ($index === 0)
+                    'is_primary' => $isPrimary
                 ]);
             }
         }
 
-        // Handle Variants
-        if ($request->has('variants')) {
-            foreach($request->variants as $variantData) {
-                if(!empty($variantData['sku'])) {
-                    $product->variants()->create($variantData);
-                }
-            }
+        // Handle SEO Data
+        if ($request->has('seo')) {
+            $product->seoMeta()->create($request->input('seo'));
         }
 
         return redirect()->route('admin.products.index')->with('success', 'Product created successfully.');
@@ -159,24 +157,29 @@ class ProductController extends Controller
             $product->categories()->sync($request->categories);
         }
 
-        // Update Image
         // Handle New Images
         if ($request->hasFile('new_images')) {
-             foreach($request->file('new_images') as $file) {
+            $primaryIndex = $request->input('primary_image_index'); // Index among NEW images
+            
+            foreach($request->file('new_images') as $index => $file) {
                 $path = $file->store('products', 'public');
-                
-                // If product has no thumbnail, set this one
-                if (!$product->thumbnail) {
-                    $product->thumbnail = $path;
-                    $product->save();
-                }
+                $isPrimary = ($request->input('primary_type') === 'new' && $index == $primaryIndex);
 
-                ProductImage::create([
+                $newImage = ProductImage::create([
                     'product_id' => $product->id,
                     'image_path' => $path,
-                    'is_primary' => false
+                    'is_primary' => $isPrimary
                 ]);
-             }
+
+                if ($isPrimary) {
+                    $product->setPrimaryImage($newImage->id);
+                }
+            }
+        }
+
+        // Handle Primary Image Change for EXISTING images
+        if ($request->input('primary_type') === 'existing' && $request->filled('primary_image_id')) {
+            $product->setPrimaryImage($request->primary_image_id);
         }
 
         // Handle Image Deletion
@@ -186,19 +189,16 @@ class ProductController extends Controller
                                           ->get();
             
             foreach($imagesToDelete as $img) {
-                // Determine if we need to update product thumbnail
                 $isThumbnail = ($product->thumbnail === $img->image_path);
-
                 Storage::disk('public')->delete($img->image_path);
                 $img->delete();
 
                 if ($isThumbnail) {
                     $nextImage = $product->images()->first();
-                    $product->thumbnail = $nextImage ? $nextImage->image_path : null;
-                    $product->save();
-                    
-                    if($nextImage) {
-                        $nextImage->update(['is_primary' => true]);
+                    if ($nextImage) {
+                        $product->setPrimaryImage($nextImage->id);
+                    } else {
+                        $product->update(['thumbnail' => null]);
                     }
                 }
             }
@@ -214,6 +214,11 @@ class ProductController extends Controller
                     $product->variants()->create($variantData);
                 }
             }
+        }
+
+        // Handle SEO Data
+        if ($request->has('seo')) {
+            $product->seoMeta()->updateOrCreate([], $request->input('seo'));
         }
 
         return redirect()->route('admin.products.index')->with('success', 'Product updated successfully.');

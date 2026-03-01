@@ -83,20 +83,19 @@ class BannerController extends Controller
         $data = $request->except(['image_path', 'mobile_image_path', 'content_image_path']);
 
         if ($request->hasFile('image_path')) {
-            // Delete old image
-            if ($banner->image_path && file_exists(public_path($banner->image_path))) {
-                // simple unlink if needed, or Storage::delete
-            }
+            $this->deleteOldImage($banner->image_path);
             $path = $request->file('image_path')->store('banners', 'public');
             $data['image_path'] = '/storage/' . $path;
         }
 
         if ($request->hasFile('mobile_image_path')) {
+            $this->deleteOldImage($banner->mobile_image_path);
             $path = $request->file('mobile_image_path')->store('banners', 'public');
             $data['mobile_image_path'] = '/storage/' . $path;
         }
 
         if ($request->hasFile('content_image_path')) {
+            $this->deleteOldImage($banner->content_image_path);
             $path = $request->file('content_image_path')->store('banners', 'public');
             $data['content_image_path'] = '/storage/' . $path;
         }
@@ -108,8 +107,29 @@ class BannerController extends Controller
 
     public function destroy(Banner $banner)
     {
+        $this->deleteOldImage($banner->image_path);
+        $this->deleteOldImage($banner->mobile_image_path);
+        $this->deleteOldImage($banner->content_image_path);
+
         $banner->delete();
         return redirect()->route('admin.banners.index')->with('success', 'Banner deleted successfully.');
+    }
+
+    /**
+     * Delete an old image file from storage.
+     */
+    private function deleteOldImage(?string $path): void
+    {
+        if (!$path) {
+            return;
+        }
+
+        // Convert '/storage/banners/file.jpg' → 'banners/file.jpg'
+        $storagePath = str_replace('/storage/', '', $path);
+
+        if (Storage::disk('public')->exists($storagePath)) {
+            Storage::disk('public')->delete($storagePath);
+        }
     }
 
     public function toggleActive(Banner $banner)

@@ -20,9 +20,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        // Force HTTPS in production (Fix for Mixed Content on Render/Heroku)
-        if($this->app->environment('production') || $this->app->environment('staging')) {
-            \Illuminate\Support\Facades\URL::forceScheme('https');
+        // Force URL scheme to match APP_URL (works for both HTTP and HTTPS)
+        $scheme = parse_url(config('app.url'), PHP_URL_SCHEME);
+        if ($scheme) {
+            \Illuminate\Support\Facades\URL::forceScheme($scheme);
         }
 
         // Share footer data with footer component

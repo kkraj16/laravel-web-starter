@@ -47,3 +47,6 @@ Route::get('/p/{id}', function ($id) {
 
 Route::get('/about', [\App\Http\Controllers\Frontend\PageController::class, 'about'])->name('about');
 Route::get('/contact', [\App\Http\Controllers\Frontend\PageController::class, 'contact'])->name('contact');
+
+// Sitemap
+Route::get('/sitemap.xml', [\App\Http\Controllers\Frontend\SitemapController::class, 'index'])->name('sitemap');

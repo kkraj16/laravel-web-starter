@@ -65,18 +65,7 @@
                         
                         <!-- SEO Tab -->
                         <div class="tab-pane fade" id="seo" role="tabpanel">
-                            <div class="mb-3">
-                                <label class="form-label">Meta Title</label>
-                                <input type="text" name="meta_title" class="form-control">
-                            </div>
-                             <div class="mb-3">
-                                <label class="form-label">Meta Keywords</label>
-                                <input type="text" name="meta_keywords" class="form-control" placeholder="comma, separated, keywords">
-                            </div>
-                             <div class="mb-3">
-                                <label class="form-label">Meta Description</label>
-                                <textarea name="meta_description" class="form-control" rows="3"></textarea>
-                            </div>
+                            @include('admin.partials._seo_fields', ['model' => new \App\Models\Category()])
                         </div>
                     </div>
                 </div>

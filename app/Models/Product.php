@@ -7,9 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Str;
 
+use App\Traits\HasSeo;
+
 class Product extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory, SoftDeletes, HasSeo;
 
     protected $fillable = [
         'name', 
@@ -94,5 +96,28 @@ class Product extends Model
             return (float) str_replace(',', '', $value);
         }
         return $value ? (float) $value : null;
+    }
+
+    /**
+     * Set a specific image as the primary image for the product.
+     * 
+     * @param int|null $imageId ID of the ProductImage to set as primary
+     * @param string|null $imagePath Path to set as thumbnail if imageId is not provided
+     * @return void
+     */
+    public function setPrimaryImage($imageId = null, $imagePath = null)
+    {
+        if ($imageId) {
+            $image = $this->images()->find($imageId);
+            if ($image) {
+                $this->images()->where('id', '!=', $imageId)->update(['is_primary' => false]);
+                $image->update(['is_primary' => true]);
+                $this->update(['thumbnail' => $image->image_path]);
+            }
+        } elseif ($imagePath) {
+            $this->images()->update(['is_primary' => false]);
+            $this->images()->where('image_path', $imagePath)->update(['is_primary' => true]);
+            $this->update(['thumbnail' => $imagePath]);
+        }
     }
 }

@@ -26,8 +26,8 @@ class FooterComposer
         // Get contact settings
         $contactInfo = [
             'address' => Setting::get('contact_address', 'Opposite Bangur College, Pali, Rajasthan – 306401'),
-            'phone' => Setting::get('contact_phone', '+91 9928154903'),
-            'email' => Setting::get('contact_email', 'info@ratannamgold.com'),
+            'phone' => Setting::get('store_phone', '+91 9950199935'),
+            'email' => Setting::get('contact_email', 'ratannamgold@zohomail.in'),
             'facebook' => Setting::get('social_facebook', '#'),
             'instagram' => Setting::get('social_instagram', '#'),
             'twitter' => Setting::get('social_twitter', '#'),

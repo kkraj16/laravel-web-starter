@@ -62,6 +62,7 @@
                         <div class="row">
                             <div class="col-md-12">
                                 <label class="form-label fw-bold">Product Images <span class="text-danger">*</span></label>
+                                <input type="hidden" name="primary_image_index" id="primaryImageIndex" value="0">
                                 <div class="image-upload-zone p-4 border border-2 border-dashed rounded text-center position-relative bg-light" id="dropZone" style="min-height: 250px;">
                                     <div class="default-view" id="defaultView">
                                         <i class="bi bi-cloud-arrow-up fs-1 text-primary mb-3 d-block"></i>
@@ -71,13 +72,14 @@
                                         <input type="file" name="images[]" class="form-control position-absolute top-0 start-0 w-100 h-100 opacity-0" id="imageInput" accept="image/*" multiple style="cursor: pointer;" required>
                                     </div>
                                     <div class="preview-view d-none" id="previewView">
-                                        <div class="d-flex flex-wrap gap-3 justify-content-center" id="imagePreviewContainer">
+                                        <div class="row g-3 justify-content-center" id="imagePreviewContainer">
                                             <!-- Previews will be inserted here -->
                                         </div>
-                                        <div class="mt-3">
-                                            <button type="button" class="btn btn-sm btn-danger" id="removeImageBtn">
-                                                <i class="bi bi-trash"></i> Clear Selection
+                                        <div class="mt-4 pt-3 border-top">
+                                            <button type="button" class="btn btn-sm btn-outline-danger" id="removeImageBtn">
+                                                <i class="bi bi-trash"></i> Clear All & Start Over
                                             </button>
+                                            <small class="text-muted ms-3"><i class="bi bi-info-circle me-1"></i>Click on an image to set it as cover</small>
                                         </div>
                                     </div>
                                 </div>
@@ -168,29 +170,7 @@
                     </div>
 
                     <!-- SEO Settings Section -->
-                    <div class="mb-3">
-                        <h5 class="border-bottom pb-2 mb-4">
-                            <i class="bi bi-search text-primary me-2"></i>SEO Settings
-                            <small class="text-muted fw-normal">(Optional but recommended)</small>
-                        </h5>
-                        <div class="row g-3">
-                            <div class="col-md-6">
-                                <label class="form-label fw-bold">Meta Title</label>
-                                <input type="text" name="meta_title" class="form-control" maxlength="60" placeholder="SEO-friendly title">
-                                <small class="text-muted">Max 60 characters for best results</small>
-                            </div>
-                            <div class="col-md-6">
-                                <label class="form-label fw-bold">Meta Keywords</label>
-                                <input type="text" name="meta_keywords" class="form-control" placeholder="gold, necklace, jewelry">
-                                <small class="text-muted">Comma-separated keywords</small>
-                            </div>
-                            <div class="col-md-12">
-                                <label class="form-label fw-bold">Meta Description</label>
-                                <textarea name="meta_description" class="form-control" rows="2" maxlength="160" placeholder="Brief description for search engines"></textarea>
-                                <small class="text-muted">Max 160 characters recommended</small>
-                            </div>
-                        </div>
-                    </div>
+                    @include('admin.partials._seo_fields', ['model' => new \App\Models\Product()])
 
                 </div>
                 
@@ -224,22 +204,53 @@ document.addEventListener('DOMContentLoaded', function() {
             imagePreviewContainer.innerHTML = ''; // Clear existing
             defaultView.classList.add('d-none');
             previewView.classList.remove('d-none');
+            
+            // Default first image as primary
+            document.getElementById('primaryImageIndex').value = 0;
 
             Array.from(files).forEach((file, index) => {
                 const reader = new FileReader();
                 reader.onload = function(e) {
-                    const imgDiv = document.createElement('div');
-                    imgDiv.className = 'position-relative';
-                    imgDiv.innerHTML = `
-                        <img src="${e.target.result}" class="img-thumbnail" style="width: 120px; height: 120px; object-fit: cover;">
-                        ${index === 0 ? '<span class="position-absolute top-0 start-50 translate-middle-x badge bg-primary" style="font-size: 0.65rem;">Cover</span>' : ''}
+                    const col = document.createElement('div');
+                    col.className = 'col-6 col-md-3 col-lg-2';
+                    col.innerHTML = `
+                        <div class="card h-100 preview-card border-0 shadow-sm position-relative overflow-hidden ${index === 0 ? 'ring-primary' : ''}" data-index="${index}" onclick="setAsPrimary(${index}, this)">
+                            <img src="${e.target.result}" class="card-img-top" style="height: 120px; object-fit: cover;">
+                            <div class="card-img-overlay d-flex flex-column justify-content-between p-2">
+                                <div class="text-end">
+                                    <span class="badge ${index === 0 ? 'bg-primary' : 'bg-dark opacity-75'} primary-badge">
+                                        ${index === 0 ? 'Cover' : 'Make Cover'}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
                     `;
-                    imagePreviewContainer.appendChild(imgDiv);
+                    imagePreviewContainer.appendChild(col);
                 }
                 reader.readAsDataURL(file);
             });
         }
     });
+
+    window.setAsPrimary = function(index, element) {
+        document.getElementById('primaryImageIndex').value = index;
+        
+        // Remove active state from all
+        document.querySelectorAll('.preview-card').forEach(card => {
+            card.classList.remove('ring-primary');
+            const badge = card.querySelector('.primary-badge');
+            badge.classList.remove('bg-primary');
+            badge.classList.add('bg-dark', 'opacity-75');
+            badge.innerText = 'Make Cover';
+        });
+
+        // Add active state to clicked
+        element.classList.add('ring-primary');
+        const badge = element.querySelector('.primary-badge');
+        badge.classList.remove('bg-dark', 'opacity-75');
+        badge.classList.add('bg-primary');
+        badge.innerText = 'Cover';
+    };
 
     dropZone.addEventListener('dragover', (e) => {
         e.preventDefault();

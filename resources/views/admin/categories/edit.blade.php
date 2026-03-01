@@ -72,18 +72,7 @@
                         
                         <!-- SEO Tab -->
                         <div class="tab-pane fade" id="seo" role="tabpanel">
-                            <div class="mb-3">
-                                <label class="form-label">Meta Title</label>
-                                <input type="text" name="meta_title" class="form-control" value="{{ $category->meta_title }}">
-                            </div>
-                             <div class="mb-3">
-                                <label class="form-label">Meta Keywords</label>
-                                <input type="text" name="meta_keywords" class="form-control" value="{{ $category->meta_keywords }}">
-                            </div>
-                             <div class="mb-3">
-                                <label class="form-label">Meta Description</label>
-                                <textarea name="meta_description" class="form-control" rows="3">{{ $category->meta_description }}</textarea>
-                            </div>
+                            @include('admin.partials._seo_fields', ['model' => $category])
                         </div>
                     </div>
                 </div>
