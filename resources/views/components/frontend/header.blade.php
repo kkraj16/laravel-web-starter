@@ -21,6 +21,7 @@
         <!-- Desktop Nav -->
         <nav class="hidden md:flex items-center space-x-12">
             @foreach([
+                ['name' => 'Home', 'route' => 'home', 'active' => 'home'],
                 ['name' => 'Collections', 'route' => 'products.index', 'active' => 'products.*'],
                 ['name' => 'About Us', 'route' => 'about', 'active' => 'about'],
                 ['name' => 'Contact', 'route' => 'contact', 'active' => 'contact'],
@@ -73,6 +74,7 @@
 
         <nav class="p-6 flex flex-col space-y-2">
             @foreach([
+                ['name' => 'Home', 'route' => 'home', 'active' => 'home'],
                 ['name' => 'Collections', 'route' => 'products.index', 'active' => 'products.*'],
                 ['name' => 'About Us', 'route' => 'about', 'active' => 'about'],
                 ['name' => 'Contact', 'route' => 'contact', 'active' => 'contact'],

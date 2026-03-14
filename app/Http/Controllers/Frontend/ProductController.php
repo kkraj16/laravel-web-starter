@@ -38,11 +38,14 @@ class ProductController extends Controller
 
 
         // Filter by Price Range
-        if ($request->has('min_price') && $request->min_price != '') {
-            $query->where('price', '>=', $request->min_price);
-        }
-        if ($request->has('max_price') && $request->max_price != '') {
-            $query->where('price', '<=', $request->max_price);
+        $hidePrices = \App\Models\Setting::get('hide_prices', 0);
+        if (!$hidePrices) {
+            if ($request->has('min_price') && $request->min_price != '') {
+                $query->where('price', '>=', $request->min_price);
+            }
+            if ($request->has('max_price') && $request->max_price != '') {
+                $query->where('price', '<=', $request->max_price);
+            }
         }
 
         // Filter by Material
@@ -116,7 +119,8 @@ class ProductController extends Controller
             'materials', 
             'purities',
             'selectedCategorySlug',
-            'selectedCategoryId'
+            'selectedCategoryId',
+            'hidePrices'
         ));
     }
     public function show($slug)

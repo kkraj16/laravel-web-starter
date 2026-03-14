@@ -16,11 +16,12 @@
                 <div class="card-body">
                     
                     <!-- Product Information Section -->
-                    <div class="mb-5">
-                        <h5 class="border-bottom pb-2 mb-4">
-                            <i class="bi bi-info-circle text-primary me-2"></i>Product Information
-                        </h5>
-                        <div class="row g-3">
+                    <div class="card card-outline card-primary mt-4">
+                        <div class="card-header">
+                            <h3 class="card-title fw-bold"><i class="bi bi-info-circle me-2"></i>Product Information</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="row g-3">
                             <div class="col-md-12">
                                 <label class="form-label fw-bold">Product Name <span class="text-danger">*</span></label>
                                 <input type="text" name="name" class="form-control form-control-lg" placeholder="e.g., Royal Kundan Necklace" required>
@@ -49,17 +50,19 @@
                                 <small class="text-muted">Product weight in grams</small>
                             </div>
                         </div>
+                        </div>
                     </div>
 
                     <!-- Media Section -->
-                    <div class="mb-5">
-                        <h5 class="border-bottom pb-2 mb-4">
-                            <i class="bi bi-images text-primary me-2"></i>Product Gallery
-                        </h5>
-                        <div class="alert alert-info py-2">
-                             <i class="bi bi-info-circle me-2"></i>The first selected image will automatically become the main thumbnail.
+                    <div class="card card-outline card-primary mt-4">
+                        <div class="card-header">
+                            <h3 class="card-title fw-bold"><i class="bi bi-images me-2"></i>Product Gallery</h3>
                         </div>
-                        <div class="row">
+                        <div class="card-body">
+                            <div class="alert alert-info py-2">
+                                 <i class="bi bi-info-circle me-2"></i>The first selected image will automatically become the main thumbnail.
+                            </div>
+                            <div class="row">
                             <div class="col-md-12">
                                 <label class="form-label fw-bold">Product Images <span class="text-danger">*</span></label>
                                 <input type="hidden" name="primary_image_index" id="primaryImageIndex" value="0">
@@ -85,18 +88,25 @@
                                 </div>
                             </div>
                         </div>
+                        </div>
                     </div>
 
                     <!-- Pricing & Inventory Section -->
-                    <div class="mb-5">
-                        <h5 class="border-bottom pb-2 mb-4">
-                            <i class="bi bi-currency-rupee text-primary me-2"></i>Pricing & Inventory
-                        </h5>
-                        <div class="row g-3">
-                            <div class="col-md-6">
-                                <label class="form-label fw-bold">Regular Price (₹) <span class="text-danger">*</span></label>
-                                <input type="number" name="price" id="regularPrice" class="form-control form-control-lg" step="0.01" placeholder="0.00" required>
-                            </div>
+                    <div class="card card-outline card-primary mt-4">
+                        <div class="card-header">
+                            <h3 class="card-title fw-bold"><i class="bi bi-currency-rupee me-2"></i>Pricing & Inventory</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <label class="form-label fw-bold">Regular Price (₹) <span class="text-danger">*</span></label>
+                                    @if($hidePrices)
+                                        <input type="number" name="price" id="regularPrice" class="form-control form-control-lg bg-light" step="0.01" value="1" readonly required>
+                                        <small class="text-muted"><i class="bi bi-info-circle me-1"></i>Price defaults to 1 because prices are globally hidden.</small>
+                                    @else
+                                        <input type="number" name="price" id="regularPrice" class="form-control form-control-lg" step="0.01" placeholder="0.00" required>
+                                    @endif
+                                </div>
                             <div class="col-md-6">
                                 <label class="form-label fw-bold">Sale Discount (%)</label>
                                 <input type="number" name="sale_discount" id="saleDiscount" class="form-control form-control-lg" step="0.01" min="0" max="100" placeholder="0">
@@ -125,14 +135,16 @@
                                 </select>
                             </div>
                         </div>
+                        </div>
                     </div>
 
                     <!-- Organization Section -->
-                    <div class="mb-5">
-                        <h5 class="border-bottom pb-2 mb-4">
-                            <i class="bi bi-collection text-primary me-2"></i>Organization
-                        </h5>
-                        <div class="row g-3">
+                    <div class="card card-outline card-primary mt-4">
+                        <div class="card-header">
+                            <h3 class="card-title fw-bold"><i class="bi bi-collection me-2"></i>Organization</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="row g-3">
                             <div class="col-md-6">
                                 <label class="form-label fw-bold">Categories <span class="text-danger">*</span></label>
                                 <select name="categories[]" id="categorySelect" class="form-select" multiple required size="8" style="height: auto;">
@@ -167,10 +179,11 @@
                                 </div>
                             </div>
                         </div>
+                        </div>
                     </div>
 
-                    <!-- SEO Settings Section -->
-                    @include('admin.partials._seo_fields', ['seoMeta' => new \App\Models\SeoMeta()])
+                    <!-- SEO Settings Section (Hidden for production for now) -->
+                    {{-- @include('admin.partials._seo_fields', ['seoMeta' => new \App\Models\SeoMeta()]) --}}
 
                 </div>
                 

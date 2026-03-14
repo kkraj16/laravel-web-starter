@@ -32,5 +32,6 @@ class AppServiceProvider extends ServiceProvider
 
         // Bind SEO data to the main layout
         View::composer('themes.default.layout', SeoComposer::class);
+        View::composer('themes.default.layouts.app', SeoComposer::class);
     }
 }

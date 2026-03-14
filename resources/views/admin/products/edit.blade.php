@@ -17,11 +17,12 @@
                 <div class="card-body">
                     
                     <!-- Product Information Section -->
-                    <div class="mb-5">
-                        <h5 class="border-bottom pb-2 mb-4">
-                            <i class="bi bi-info-circle text-warning me-2"></i>Product Information
-                        </h5>
-                        <div class="row g-3">
+                    <div class="card card-outline card-warning mt-4">
+                        <div class="card-header">
+                            <h3 class="card-title fw-bold"><i class="bi bi-info-circle me-2"></i>Product Information</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="row g-3">
                             <div class="col-md-12">
                                 <label class="form-label fw-bold">Product Name <span class="text-danger">*</span></label>
                                 <input type="text" name="name" class="form-control form-control-lg" value="{{ $product->name }}" placeholder="e.g., Royal Kundan Necklace" required>
@@ -50,13 +51,15 @@
                                 <small class="text-muted">Product weight in grams</small>
                             </div>
                         </div>
+                        </div>
                     </div>
 
                     <!-- Media Section -->
-                    <div class="mb-5">
-                        <h5 class="border-bottom pb-2 mb-4">
-                            <i class="bi bi-images text-warning me-2"></i>Media Gallery
-                        </h5>
+                    <div class="card card-outline card-warning mt-4">
+                        <div class="card-header">
+                            <h3 class="card-title fw-bold"><i class="bi bi-images me-2"></i>Media Gallery</h3>
+                        </div>
+                        <div class="card-body">
                         
                         <input type="hidden" name="primary_type" id="primaryType" value="existing">
                         <input type="hidden" name="primary_image_id" id="primaryImageId" value="{{ $product->images->where('is_primary', true)->first()->id ?? '' }}">
@@ -116,18 +119,25 @@
                                 </div>
                             </div>
                         </div>
+                        </div>
                     </div>
 
                     <!-- Pricing & Inventory Section -->
-                    <div class="mb-5">
-                        <h5 class="border-bottom pb-2 mb-4">
-                            <i class="bi bi-currency-rupee text-warning me-2"></i>Pricing & Inventory
-                        </h5>
-                        <div class="row g-3">
-                            <div class="col-md-6">
-                                <label class="form-label fw-bold">Regular Price (₹) <span class="text-danger">*</span></label>
-                                <input type="number" name="price" id="regularPrice" class="form-control form-control-lg" step="0.01" value="{{ $product->price }}" placeholder="0.00" required>
-                            </div>
+                    <div class="card card-outline card-warning mt-4">
+                        <div class="card-header">
+                            <h3 class="card-title fw-bold"><i class="bi bi-currency-rupee me-2"></i>Pricing & Inventory</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <label class="form-label fw-bold">Regular Price (₹) <span class="text-danger">*</span></label>
+                                    @if($hidePrices)
+                                        <input type="number" name="price" id="regularPrice" class="form-control form-control-lg bg-light" step="0.01" value="{{ $product->price > 0 ? $product->price : 1 }}" readonly required>
+                                        <small class="text-muted"><i class="bi bi-info-circle me-1"></i>Price defaults to 1 because prices are globally hidden.</small>
+                                    @else
+                                        <input type="number" name="price" id="regularPrice" class="form-control form-control-lg" step="0.01" value="{{ $product->price }}" placeholder="0.00" required>
+                                    @endif
+                                </div>
                             <div class="col-md-6">
                                 <label class="form-label fw-bold">Sale Discount (%)</label>
                                 @php
@@ -162,14 +172,16 @@
                                 </select>
                             </div>
                         </div>
+                        </div>
                     </div>
 
                     <!-- Organization Section -->
-                    <div class="mb-5">
-                        <h5 class="border-bottom pb-2 mb-4">
-                            <i class="bi bi-collection text-warning me-2"></i>Organization
-                        </h5>
-                        <div class="row g-3">
+                    <div class="card card-outline card-warning mt-4">
+                        <div class="card-header">
+                            <h3 class="card-title fw-bold"><i class="bi bi-collection me-2"></i>Organization</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="row g-3">
                             <div class="col-md-6">
                                 <label class="form-label fw-bold">Categories <span class="text-danger">*</span></label>
                                 @php $selectedCategories = $product->categories->pluck('id')->toArray(); @endphp
@@ -205,10 +217,11 @@
                                 </div>
                             </div>
                         </div>
+                        </div>
                     </div>
 
-                    <!-- SEO Settings Section -->
-                    @include('admin.partials._seo_fields', ['seoMeta' => $product->seoMeta ?? new \App\Models\SeoMeta()])
+                    <!-- SEO Settings Section (Hidden for production for now) -->
+                    {{-- @include('admin.partials._seo_fields', ['seoMeta' => $product->seoMeta ?? new \App\Models\SeoMeta()]) --}}
 
                 </div>
                 

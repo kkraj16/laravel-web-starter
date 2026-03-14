@@ -55,6 +55,7 @@
                         </div>
 
                         <!-- Price Range Filter -->
+                        @if(!$hidePrices)
                         <div>
                             <h4 class="font-serif text-lg mb-4 text-gray-900">Price Range</h4>
                             <div class="flex gap-2">
@@ -78,6 +79,7 @@
                                 >
                             </div>
                         </div>
+                        @endif
 
                         <!-- Material Filter -->
                         <div>

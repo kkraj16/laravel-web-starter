@@ -18,10 +18,27 @@ class SeoComposer
         $viewData = $view->getData();
 
         // 1. Priority: Model-specific SEO (Product or Category)
+        /* 
+         * Temporarily disabled product SEO for production
+         *
         if (isset($viewData['product']) && method_exists($viewData['product'], 'seoMeta')) {
             $seo = $viewData['product']->seoMeta;
-        } elseif (isset($viewData['category']) && method_exists($viewData['category'], 'seoMeta')) {
+            
+            // Inject product image if og_image is missing
+            if ($seo && empty($seo->og_image)) {
+                $seo->og_image = $viewData['product']->primary_image;
+            }
+        } else
+        */
+        if (isset($viewData['category']) && method_exists($viewData['category'], 'seoMeta')) {
             $seo = $viewData['category']->seoMeta;
+
+            // Inject category image if og_image is missing
+            if ($seo && empty($seo->og_image) && $viewData['category']->image) {
+                // Ensure the path is fully qualified or absolute for OG tags
+                $imagePath = $viewData['category']->image;
+                $seo->og_image = str_starts_with($imagePath, 'http') ? $imagePath : asset('storage/' . $imagePath);
+            }
         }
 
         // 2. Secondary: Route-specific SEO (Home, About, Contact)

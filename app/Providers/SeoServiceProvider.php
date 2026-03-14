@@ -22,5 +22,7 @@ class SeoServiceProvider extends ServiceProvider
         view()->composer('theme::layout', \App\Http\View\Composers\SeoComposer::class);
         // Also register for the default layout if theme namespace is not used correctly everywhere
         view()->composer('themes.default.layout', \App\Http\View\Composers\SeoComposer::class);
+        view()->composer('theme::layouts.app', \App\Http\View\Composers\SeoComposer::class);
+        view()->composer('themes.default.layouts.app', \App\Http\View\Composers\SeoComposer::class);
     }
 }

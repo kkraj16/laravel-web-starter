@@ -43,7 +43,8 @@ class ProductController extends Controller
     public function create()
     {
         $categories = Category::whereNull('parent_id')->with('children')->get();
-        return view('admin.products.create', compact('categories'));
+        $hidePrices = \App\Models\Setting::get('hide_prices', 0);
+        return view('admin.products.create', compact('categories', 'hidePrices'));
     }
 
     public function store(Request $request)
@@ -118,7 +119,8 @@ class ProductController extends Controller
     {
         $categories = Category::whereNull('parent_id')->with('children')->get();
         $product->load(['categories', 'variants']);
-        return view('admin.products.edit', compact('product', 'categories'));
+        $hidePrices = \App\Models\Setting::get('hide_prices', 0);
+        return view('admin.products.edit', compact('product', 'categories', 'hidePrices'));
     }
 
     public function update(Request $request, Product $product)
