@@ -236,4 +236,31 @@ class ProductController extends Controller
         $product->delete(); // Soft Delete
         return redirect()->route('admin.products.index')->with('success', 'Product deleted (archived).');
     }
+
+    public function toggle(Request $request, $id)
+    {
+        $field = $request->input('field');
+        if (!in_array($field, ['is_active', 'is_trending'])) {
+            return response()->json(['success' => false, 'message' => 'Invalid field.'], 400);
+        }
+
+        $product = Product::findOrFail($id);
+        
+        // Use integer-based toggle to be absolute
+        $newValue = $product->$field ? 0 : 1;
+        
+        // Use direct where update to be 100% sure it hits the DB
+        Product::where('id', $id)->update([$field => $newValue]);
+
+        // Explicitly clear cache
+        \Illuminate\Support\Facades\Cache::forget('home_trending_products');
+
+        \Illuminate\Support\Facades\Log::info("Product Toggle: ID {$id}, Field {$field}, New Value {$newValue}");
+
+        return response()->json([
+            'success' => true, 
+            'message' => 'Product ' . ($field == 'is_active' ? 'Status' : 'Trending') . ' updated.',
+            'value' => (bool)$newValue
+        ]);
+    }
 }

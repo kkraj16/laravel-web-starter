@@ -3,6 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Ratannam Gold | Admin</title>
 
     <!-- Google Fonts: Source Sans Pro -->
@@ -256,6 +257,7 @@
     <!-- ./wrapper -->
 
     <!-- Scripts -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/overlayscrollbars@2.1.0/browser/overlayscrollbars.browser.es6.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.7/dist/umd/popper.min.js" integrity="sha384-zYPOMqeu1DAVkHiLqWBUTcbYfZ8osu1Nd6Z89ify25QV9guujx43ITvfi12/QExE" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.min.js" integrity="sha384-Y4oOpwW3duJdCWv5ly8SCFYWqFDsfob/3GkgExXKV4idmbt98QcxXYs9UoXAB7BZ" crossorigin="anonymous"></script>
@@ -284,6 +286,16 @@
         </div>
     </div>
 
+    <!-- Toast Container -->
+    <div class="toast-container position-fixed bottom-0 end-0 p-3" style="z-index: 1100">
+        <div id="liveToast" class="toast align-items-center border-0" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="d-flex">
+                <div class="toast-body" id="toastMessage"></div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+        </div>
+    </div>
+
     <script>
         function confirmDelete(actionUrl, warningText = "") {
             let form = document.getElementById('deleteForm');
@@ -291,6 +303,30 @@
             document.getElementById('deleteWarningText').innerText = warningText;
             new bootstrap.Modal(document.getElementById('deleteModal')).show();
         }
+
+        function showToast(message, type = 'success') {
+            const toastElement = document.getElementById('liveToast');
+            const toastBody = document.getElementById('toastMessage');
+            
+            toastBody.innerText = message;
+            
+            toastElement.classList.remove('text-bg-success', 'text-bg-danger', 'text-bg-warning');
+            
+            if (type === 'success') toastElement.classList.add('text-bg-success');
+            else if (type === 'error') toastElement.classList.add('text-bg-danger');
+            else if (type === 'warning') toastElement.classList.add('text-bg-warning');
+
+            const toast = new bootstrap.Toast(toastElement);
+            toast.show();
+        }
+
+        // Global AJAX Setup
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
     </script>
+    @stack('scripts')
 </body>
 </html>

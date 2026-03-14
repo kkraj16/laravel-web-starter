@@ -51,8 +51,8 @@
                     <th style="width: 80px;">Image</th>
                     <th>Product</th>
                     <th style="width: 120px;">Material</th>
-                    <th style="width: 150px;">Price</th>
                     <th style="width: 130px;" class="text-center">Stock</th>
+                    <th style="width: 100px;" class="text-center">Trending</th>
                     <th style="width: 100px;" class="text-center">Status</th>
                     <th style="width: 120px;" class="text-end">Actions</th>
                 </tr>
@@ -80,14 +80,6 @@
                             <span class="text-muted small">-</span>
                         @endif
                     </td>
-                    <td>
-                        @if($product->sale_price && $product->sale_price < $product->price)
-                            <div class="text-success fw-bold">₹{{ number_format($product->sale_price, 0) }}</div>
-                            <small class="text-decoration-line-through text-muted">₹{{ number_format($product->price, 0) }}</small>
-                        @else
-                             <div class="fw-bold">₹{{ number_format($product->price, 0) }}</div>
-                        @endif
-                    </td>
                     <td class="text-center">
                         @if($product->stock_status == 'instock')
                             <span class="badge text-bg-success">In Stock</span>
@@ -98,11 +90,18 @@
                         @endif
                     </td>
                     <td class="text-center">
-                         @if($product->is_active)
-                            <span class="badge text-bg-success"><i class="bi bi-check-circle"></i> Active</span>
-                        @else
-                            <span class="badge text-bg-secondary"><i class="bi bi-x-circle"></i> Inactive</span>
-                        @endif
+                        <div class="form-check form-switch d-flex justify-content-center">
+                            <input class="form-check-input product-toggle" type="checkbox" role="switch" 
+                                   data-id="{{ $product->id }}" data-field="is_trending" 
+                                   {{ $product->is_trending ? 'checked' : '' }}>
+                        </div>
+                    </td>
+                    <td class="text-center">
+                        <div class="form-check form-switch d-flex justify-content-center">
+                            <input class="form-check-input product-toggle" type="checkbox" role="switch" 
+                                   data-id="{{ $product->id }}" data-field="is_active" 
+                                   {{ $product->is_active ? 'checked' : '' }}>
+                        </div>
                     </td>
                     <td class="text-end">
                         <div class="btn-group btn-group-sm">
@@ -131,4 +130,41 @@
         {{ $products->links('pagination::bootstrap-5') }}
     </div>
 </div>
+
+@push('scripts')
+<script>
+$(document).ready(function() {
+    $(document).on('change', '.product-toggle', function() {
+        const _this = $(this);
+        const id = _this.data('id');
+        const field = _this.data('field');
+        const isChecked = _this.is(':checked');
+        
+        // Generate URL more reliably
+        const url = "{{ route('admin.products.toggle', ['product' => '_ID_']) }}".replace('_ID_', id);
+
+        $.ajax({
+            url: url,
+            method: 'POST',
+            dataType: 'json',
+            data: {
+                field: field
+            },
+            success: function(response) {
+                if(response.success) {
+                    showToast(response.message, 'success');
+                } else {
+                    showToast(response.message, 'error');
+                    _this.prop('checked', !isChecked);
+                }
+            },
+            error: function() {
+                showToast('Something went wrong. Please try again.', 'error');
+                _this.prop('checked', !isChecked);
+            }
+        });
+    });
+});
+</script>
+@endpush
 @endsection

@@ -23,6 +23,7 @@ Route::group(['middleware' => ['web', 'auth']], function () {
     Route::resource('orders', \App\Http\Controllers\Admin\OrderController::class);
     
     // Product Routes
+    Route::post('products/{product}/toggle', [ProductController::class, 'toggle'])->name('products.toggle');
     Route::resource('products', ProductController::class);
     Route::resource('categories', \App\Http\Controllers\Admin\CategoryController::class);
     Route::resource('testimonials', \App\Http\Controllers\Admin\TestimonialController::class);
