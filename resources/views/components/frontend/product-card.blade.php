@@ -13,12 +13,12 @@
 <div class="group relative bg-white h-full flex flex-col {{ $class }}" x-data="{ loaded: false }">
     
     <!-- Image Skeleton -->
-    <div x-show="false" class="aspect-[4/5] bg-gray-100 animate-pulse w-full relative overflow-hidden flex-shrink-0">
+    <div x-show="!loaded" class="aspect-[4/5] bg-gray-100 animate-pulse w-full relative overflow-hidden flex-shrink-0">
          <div class="absolute inset-0 bg-gradient-to-r from-gray-100 via-gray-50 to-gray-100 shimmer"></div>
     </div>
 
     <!-- Product Image -->
-    <div class="aspect-[4/5] relative overflow-hidden bg-gray-50 flex-shrink-0">
+    <div class="aspect-[4/5] relative overflow-hidden bg-gray-50 flex-shrink-0" x-show="loaded" x-cloak>
         <a href="{{ $link }}" class="block w-full h-full">
             <img src="{{ $image }}" 
                  alt="{{ $name }}" 

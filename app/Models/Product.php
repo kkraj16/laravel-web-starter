@@ -12,6 +12,12 @@ use App\Traits\HasSeo;
 class Product extends Model
 {
     use HasFactory, SoftDeletes, HasSeo;
+    
+    protected static function booted()
+    {
+        static::saved(fn () => \Illuminate\Support\Facades\Cache::forget('home_trending_products'));
+        static::deleted(fn () => \Illuminate\Support\Facades\Cache::forget('home_trending_products'));
+    }
 
     protected $fillable = [
         'name', 

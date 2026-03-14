@@ -8,6 +8,12 @@ use Illuminate\Database\Eloquent\Model;
 class Banner extends Model
 {
     use HasFactory;
+    
+    protected static function booted()
+    {
+        static::saved(fn () => \Illuminate\Support\Facades\Cache::forget('home_banners'));
+        static::deleted(fn () => \Illuminate\Support\Facades\Cache::forget('home_banners'));
+    }
 
     protected $fillable = [
         'title',

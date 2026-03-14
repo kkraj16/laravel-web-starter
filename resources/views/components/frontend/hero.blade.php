@@ -24,12 +24,14 @@
                     <!-- Background Image -->
                     <!-- Desktop Background Image -->
                     <div class="absolute inset-0 bg-cover bg-center transition-transform duration-[10000ms] ease-linear transform {{ $banner->animate_image ? 'scale-100 hover:scale-110' : '' }} hidden md:block" 
-                         style="background-image: url('{{ $banner->image_path }}'); {{ $banner->animate_image ? 'animation: zoomEffect 20s infinite alternate;' : '' }}">
+                         style="background-image: url('{{ $banner->image_path }}'); {{ $banner->animate_image ? 'animation: zoomEffect 20s infinite alternate;' : '' }}"
+                         @if($loop->first) fetchpriority="high" @else loading="lazy" @endif>
                     </div>
 
                     <!-- Mobile Background Image -->
                     <div class="absolute inset-0 bg-cover bg-center transition-transform duration-[10000ms] ease-linear transform {{ $banner->animate_image ? 'scale-100 hover:scale-110' : '' }} md:hidden" 
-                         style="background-image: url('{{ $banner->mobile_image_path ?: $banner->image_path }}'); {{ $banner->animate_image ? 'animation: zoomEffect 20s infinite alternate;' : '' }}">
+                         style="background-image: url('{{ $banner->mobile_image_path ?: $banner->image_path }}'); {{ $banner->animate_image ? 'animation: zoomEffect 20s infinite alternate;' : '' }}"
+                         @if($loop->first) fetchpriority="high" @else loading="lazy" @endif>
                     </div>
 
                     <!-- Overlay -->

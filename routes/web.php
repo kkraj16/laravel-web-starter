@@ -16,22 +16,30 @@ Route::post('password/reset', [App\Http\Controllers\Auth\ResetPasswordController
 
 // Frontend
 Route::get('/', function () {
-    $products = \App\Models\Product::with('categories')
-                ->where('is_active', true)
-                ->where('is_trending', true)
-                ->latest()
-                ->take(8)
-                ->get();
+    $cacheTtl = 3600; // 1 hour
 
-    $banners = \App\Models\Banner::where('is_active', true)
-                ->orderBy('sort_order', 'asc')
-                ->orderBy('created_at', 'desc')
-                ->get();
+    $banners = \Illuminate\Support\Facades\Cache::remember('home_banners', $cacheTtl, function () {
+        return \App\Models\Banner::where('is_active', true)
+            ->orderBy('sort_order', 'asc')
+            ->orderBy('created_at', 'desc')
+            ->get();
+    });
 
-    $testimonials = \App\Models\Testimonial::where('is_active', true)
-                    ->latest()
-                    ->take(10)
-                    ->get();
+    $products = \Illuminate\Support\Facades\Cache::remember('home_trending_products', $cacheTtl, function () {
+        return \App\Models\Product::with('categories')
+            ->where('is_active', true)
+            ->where('is_trending', true)
+            ->latest()
+            ->take(8)
+            ->get();
+    });
+
+    $testimonials = \Illuminate\Support\Facades\Cache::remember('home_testimonials', $cacheTtl, function () {
+        return \App\Models\Testimonial::where('is_active', true)
+            ->latest()
+            ->take(10)
+            ->get();
+    });
     
     return view('theme::home', compact('products', 'testimonials', 'banners'));
 })->name('home');

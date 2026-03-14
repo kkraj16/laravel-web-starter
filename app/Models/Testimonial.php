@@ -9,6 +9,12 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Testimonial extends Model
 {
     use HasFactory, SoftDeletes;
+    
+    protected static function booted()
+    {
+        static::saved(fn () => \Illuminate\Support\Facades\Cache::forget('home_testimonials'));
+        static::deleted(fn () => \Illuminate\Support\Facades\Cache::forget('home_testimonials'));
+    }
 
     protected $fillable = [
         'name',
