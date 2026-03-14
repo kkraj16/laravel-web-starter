@@ -59,6 +59,14 @@
                             <small class="d-block text-muted mt-1">Display Silver rates in the top price ticker</small>
                         </div>
                     </div>
+
+                    <div class="mb-4">
+                        <div class="form-check form-switch p-3 bg-light rounded border">
+                            <input class="form-check-input ms-0 me-2" type="checkbox" id="hidePrices" name="hide_prices" value="1" {{ ($settings['hide_prices'] ?? 0) ? 'checked' : '' }} style="margin-left: -2em;">
+                            <label class="form-check-label fw-bold text-danger" for="hidePrices">&nbsp;&nbsp;&nbsp;Hide All Prices Globally</label>
+                            <small class="d-block mt-1 ms-4 text-muted">When enabled, all product prices will be hidden across the website. Customers will see "Price on Request" instead.</small>
+                        </div>
+                    </div>
                     
                     <button type="submit" class="btn btn-warning w-100 fw-bold py-2">Update Market Rates</button>
                     <div class="text-center mt-3">

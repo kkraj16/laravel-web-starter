@@ -208,7 +208,7 @@
                     </div>
 
                     <!-- SEO Settings Section -->
-                    @include('admin.partials._seo_fields', ['model' => $product])
+                    @include('admin.partials._seo_fields', ['seoMeta' => $product->seoMeta ?? new \App\Models\SeoMeta()])
 
                 </div>
                 

@@ -65,7 +65,7 @@
                         
                         <!-- SEO Tab -->
                         <div class="tab-pane fade" id="seo" role="tabpanel">
-                            @include('admin.partials._seo_fields', ['model' => new \App\Models\Category()])
+                            @include('admin.partials._seo_fields', ['seoMeta' => new \App\Models\SeoMeta()])
                         </div>
                     </div>
                 </div>

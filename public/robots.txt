@@ -3,4 +3,4 @@ Disallow: /admin
 Disallow: /login
 Disallow: /register
 
-Sitemap: http://localhost/ratannam-prod/public/sitemap.xml
+Sitemap: https://ratannamgold.com/sitemap.xml

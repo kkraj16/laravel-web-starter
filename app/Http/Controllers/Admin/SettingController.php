@@ -59,11 +59,7 @@ class SettingController extends Controller
 
         $data = $request->except(['_token', '_method']);
 
-        // Handle Checkboxes (boolean fields)
-        // If 'hide_prices' is not in the request, it means it was unchecked.
-        if (!$request->has('hide_prices')) {
-            Setting::set('hide_prices', 0, 'general', 'boolean');
-        }
+        // Hide Prices handled in updateRates now
 
         // Handle File Uploads
         if ($request->hasFile('site_logo')) {
@@ -101,9 +97,6 @@ class SettingController extends Controller
                 $type = 'number';
             } elseif (str_starts_with($key, 'seo_') || $key == 'site_title') {
                 $group = 'seo';
-            } elseif ($key == 'hide_prices') {
-                $type = 'boolean';
-                $value = 1; // It's present, so it's true
             } elseif ($key == 'app_name' || $key == 'site_logo_url' || $key == 'site_favicon_url') {
                 $group = 'global';
             }
@@ -129,6 +122,7 @@ class SettingController extends Controller
         // Handle visibility toggles (checkboxes)
         Setting::set('show_gold_prices', $request->has('show_gold_prices') ? 1 : 0, 'rates', 'boolean');
         Setting::set('show_silver_prices', $request->has('show_silver_prices') ? 1 : 0, 'rates', 'boolean');
+        Setting::set('hide_prices', $request->has('hide_prices') ? 1 : 0, 'general', 'boolean');
 
         return redirect()->back()->with('success', 'Live rates updated successfully.');
     }

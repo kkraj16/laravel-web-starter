@@ -6,31 +6,31 @@
         <div class="row g-3">
             <div class="col-md-12">
                 <label class="form-label text-uppercase fs-7 fw-bold text-muted">Meta Title</label>
-                <input type="text" name="seo[meta_title]" class="form-control" value="{{ old('seo.meta_title', $model->seoMeta->meta_title ?? '') }}" placeholder="Enter meta title (Recommended: 50-60 chars)">
+                <input type="text" name="seo[meta_title]" class="form-control" value="{{ old('seo.meta_title', $seoMeta->meta_title ?? '') }}" placeholder="Enter meta title (Recommended: 50-60 chars)">
             </div>
             
             <div class="col-md-12">
                 <label class="form-label text-uppercase fs-7 fw-bold text-muted">Meta Description</label>
-                <textarea name="seo[meta_description]" class="form-control" rows="3" placeholder="Enter meta description (Recommended: 150-160 chars)">{{ old('seo.meta_description', $model->seoMeta->meta_description ?? '') }}</textarea>
+                <textarea name="seo[meta_description]" class="form-control" rows="3" placeholder="Enter meta description (Recommended: 150-160 chars)">{{ old('seo.meta_description', $seoMeta->meta_description ?? '') }}</textarea>
             </div>
 
             <div class="col-md-12">
                 <label class="form-label text-uppercase fs-7 fw-bold text-muted">Keywords (Comma Separated)</label>
-                <input type="text" name="seo[meta_keywords]" class="form-control" value="{{ old('seo.meta_keywords', $model->seoMeta->meta_keywords ?? '') }}" placeholder="gold, jewellery, authentic">
+                <input type="text" name="seo[meta_keywords]" class="form-control" value="{{ old('seo.meta_keywords', $seoMeta->meta_keywords ?? '') }}" placeholder="gold, jewellery, authentic">
             </div>
 
             <div class="col-md-12">
                 <label class="form-label text-uppercase fs-7 fw-bold text-muted">Canonical URL</label>
-                <input type="url" name="seo[canonical_url]" class="form-control" value="{{ old('seo.canonical_url', $model->seoMeta->canonical_url ?? '') }}" placeholder="{{ url()->current() }}">
+                <input type="url" name="seo[canonical_url]" class="form-control" value="{{ old('seo.canonical_url', $seoMeta->canonical_url ?? '') }}" placeholder="{{ url()->current() }}">
             </div>
 
             <div class="col-md-6">
                 <label class="form-label text-uppercase fs-7 fw-bold text-muted">Robots Directive</label>
                 <select name="seo[robots]" class="form-select">
-                    <option value="index, follow" {{ (old('seo.robots', $model->seoMeta->robots ?? '') == 'index, follow') ? 'selected' : '' }}>Index, Follow</option>
-                    <option value="noindex, follow" {{ (old('seo.robots', $model->seoMeta->robots ?? '') == 'noindex, follow') ? 'selected' : '' }}>No-Index, Follow</option>
-                    <option value="index, nofollow" {{ (old('seo.robots', $model->seoMeta->robots ?? '') == 'index, nofollow') ? 'selected' : '' }}>Index, No-Follow</option>
-                    <option value="noindex, nofollow" {{ (old('seo.robots', $model->seoMeta->robots ?? '') == 'noindex, nofollow') ? 'selected' : '' }}>No-Index, No-Follow</option>
+                    <option value="index, follow" {{ (old('seo.robots', $seoMeta->robots ?? '') == 'index, follow') ? 'selected' : '' }}>Index, Follow</option>
+                    <option value="noindex, follow" {{ (old('seo.robots', $seoMeta->robots ?? '') == 'noindex, follow') ? 'selected' : '' }}>No-Index, Follow</option>
+                    <option value="index, nofollow" {{ (old('seo.robots', $seoMeta->robots ?? '') == 'index, nofollow') ? 'selected' : '' }}>Index, No-Follow</option>
+                    <option value="noindex, nofollow" {{ (old('seo.robots', $seoMeta->robots ?? '') == 'noindex, nofollow') ? 'selected' : '' }}>No-Index, No-Follow</option>
                 </select>
             </div>
 
@@ -40,17 +40,17 @@
 
             <div class="col-md-12">
                 <label class="form-label text-uppercase fs-7 fw-bold text-muted">OG Title</label>
-                <input type="text" name="seo[og_title]" class="form-control" value="{{ old('seo.og_title', $model->seoMeta->og_title ?? '') }}" placeholder="Fallbacks to Meta Title if empty">
+                <input type="text" name="seo[og_title]" class="form-control" value="{{ old('seo.og_title', $seoMeta->og_title ?? '') }}" placeholder="Fallbacks to Meta Title if empty">
             </div>
 
             <div class="col-md-12">
                 <label class="form-label text-uppercase fs-7 fw-bold text-muted">OG Description</label>
-                <textarea name="seo[og_description]" class="form-control" rows="2" placeholder="Fallbacks to Meta Description if empty">{{ old('seo.og_description', $model->seoMeta->og_description ?? '') }}</textarea>
+                <textarea name="seo[og_description]" class="form-control" rows="2" placeholder="Fallbacks to Meta Description if empty">{{ old('seo.og_description', $seoMeta->og_description ?? '') }}</textarea>
             </div>
 
             <div class="col-md-12">
                 <label class="form-label text-uppercase fs-7 fw-bold text-muted">OG Image URL</label>
-                <input type="text" name="seo[og_image]" class="form-control" value="{{ old('seo.og_image', $model->seoMeta->og_image ?? '') }}" placeholder="Path to image (e.g. uploads/seo/image.jpg)">
+                <input type="text" name="seo[og_image]" class="form-control" value="{{ old('seo.og_image', $seoMeta->og_image ?? '') }}" placeholder="Path to image (e.g. uploads/seo/image.jpg)">
             </div>
         </div>
     </div>

@@ -63,10 +63,10 @@
                             <input type="hidden" name="page_seo" value="{{ $page }}">
                             
                             @php
-                                $model = \App\Models\SeoMeta::where('route_name', $page)->first() ?: new \App\Models\SeoMeta();
+                                $seoMeta = \App\Models\SeoMeta::where('route_name', $page)->first() ?: new \App\Models\SeoMeta();
                             @endphp
 
-                            @include('admin.partials._seo_fields', ['model' => $model])
+                            @include('admin.partials._seo_fields', ['seoMeta' => $seoMeta])
                             
                             <div class="mt-4 text-end">
                                 <button type="submit" class="btn btn-success px-4">Update {{ ucfirst($page) }} SEO</button>

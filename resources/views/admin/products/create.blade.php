@@ -170,7 +170,7 @@
                     </div>
 
                     <!-- SEO Settings Section -->
-                    @include('admin.partials._seo_fields', ['model' => new \App\Models\Product()])
+                    @include('admin.partials._seo_fields', ['seoMeta' => new \App\Models\SeoMeta()])
 
                 </div>
                 
