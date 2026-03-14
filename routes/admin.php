@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::group(['middleware' => ['web', 'auth']], function () {
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/optimize-images', [DashboardController::class, 'optimizeImages'])->name('optimize-images');
     
     // Profile Routes
     Route::get('/profile', [\App\Http\Controllers\Admin\UserController::class, 'profile'])->name('profile');

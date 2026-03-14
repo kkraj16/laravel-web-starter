@@ -16,7 +16,11 @@
             <!-- Product Grid -->
             <div class="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8">
                 @forelse($products as $product)
-                    <x-frontend.product-card :product="$product" class="bg-white p-2" />
+                    <x-frontend.product-card 
+                        :product="$product" 
+                        class="bg-white p-2" 
+                        :loading="$loop->index < 4 ? 'eager' : 'lazy'" 
+                    />
                 @empty
                     <!-- Fallback if no products -->
                     @for ($i = 0; $i < 4; $i++)

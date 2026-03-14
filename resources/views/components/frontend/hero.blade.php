@@ -1,37 +1,42 @@
 @props(['banners' => []])
 
-<div class="relative w-full h-[600px] md:h-[800px] bg-black overflow-hidden" x-data="{ loaded: false }" x-init="setTimeout(() => loaded = true, 500)">
+<div class="relative w-full h-[600px] md:h-[800px] bg-black overflow-hidden" x-data="{ loaded: true }">
     
-    <!-- Skeleton Loader -->
-    <div x-show="!loaded" class="absolute inset-0 bg-gray-900 animate-pulse flex items-center justify-center">
-        <div class="text-center w-full max-w-2xl px-6">
-            <div class="h-4 bg-gray-800 rounded w-24 mx-auto mb-6"></div>
-            <div class="h-12 bg-gray-800 rounded w-3/4 mx-auto mb-8"></div>
-            <div class="h-px bg-gray-800 w-16 mx-auto mb-8"></div>
-            <div class="h-10 bg-gray-800 rounded w-32 mx-auto"></div>
+    <!-- Skeleton Loader (Fallback for extremely slow connections) -->
+    <template x-if="!loaded">
+        <div class="absolute inset-0 bg-gray-900 animate-pulse flex items-center justify-center">
+            <div class="text-center w-full max-w-2xl px-6">
+                <div class="h-4 bg-gray-800 rounded w-24 mx-auto mb-6"></div>
+                <div class="h-12 bg-gray-800 rounded w-3/4 mx-auto mb-8"></div>
+                <div class="h-px bg-gray-800 w-16 mx-auto mb-8"></div>
+                <div class="h-10 bg-gray-800 rounded w-32 mx-auto"></div>
+            </div>
         </div>
-    </div>
+    </template>
 
     <!-- Swiper Slider -->
-    <div x-show="loaded" 
-         x-transition:enter="transition ease-out duration-1000"
-         x-transition:enter-start="opacity-0 transform scale-105"
-         x-transition:enter-end="opacity-100 transform scale-100"
-         class="swiper hero-swiper h-full w-full">
+    <div class="swiper hero-swiper h-full w-full opacity-0 transition-opacity duration-1000"
+         :class="{ 'opacity-100': loaded }">
         <div class="swiper-wrapper">
             @forelse($banners as $banner)
                 <div class="swiper-slide relative flex items-center justify-center overflow-hidden">
                     <!-- Background Image -->
                     <!-- Desktop Background Image -->
-                    <div class="absolute inset-0 bg-cover bg-center transition-transform duration-[10000ms] ease-linear transform {{ $banner->animate_image ? 'scale-100 hover:scale-110' : '' }} hidden md:block" 
-                         style="background-image: url('{{ $banner->image_path }}'); {{ $banner->animate_image ? 'animation: zoomEffect 20s infinite alternate;' : '' }}"
-                         @if($loop->first) fetchpriority="high" @else loading="lazy" @endif>
+                    <div class="absolute inset-0 transition-transform duration-[10000ms] ease-linear transform {{ $banner->animate_image ? 'scale-100 hover:scale-110' : '' }} hidden md:block" 
+                         style="{{ $banner->animate_image ? 'animation: zoomEffect 20s infinite alternate;' : '' }}">
+                        <img src="{{ $banner->image_path }}" 
+                             alt="{{ $banner->title ?: 'Banner Image' }}"
+                             class="w-full h-full object-cover"
+                             @if($loop->first) fetchpriority="high" loading="eager" @else loading="lazy" @endif>
                     </div>
 
                     <!-- Mobile Background Image -->
-                    <div class="absolute inset-0 bg-cover bg-center transition-transform duration-[10000ms] ease-linear transform {{ $banner->animate_image ? 'scale-100 hover:scale-110' : '' }} md:hidden" 
-                         style="background-image: url('{{ $banner->mobile_image_path ?: $banner->image_path }}'); {{ $banner->animate_image ? 'animation: zoomEffect 20s infinite alternate;' : '' }}"
-                         @if($loop->first) fetchpriority="high" @else loading="lazy" @endif>
+                    <div class="absolute inset-0 transition-transform duration-[10000ms] ease-linear transform {{ $banner->animate_image ? 'scale-100 hover:scale-110' : '' }} md:hidden" 
+                         style="{{ $banner->animate_image ? 'animation: zoomEffect 20s infinite alternate;' : '' }}">
+                        <img src="{{ $banner->mobile_image_path ?: $banner->image_path }}" 
+                             alt="{{ $banner->title ?: 'Banner Image' }}"
+                             class="w-full h-full object-cover"
+                             @if($loop->first) fetchpriority="high" loading="eager" @else loading="lazy" @endif>
                     </div>
 
                     <!-- Overlay -->
@@ -85,12 +90,19 @@
             @empty
                 <!-- Static Slide 1 (Fallback) -->
                 <div class="swiper-slide relative flex items-center justify-center">
-                    <div class="absolute inset-0 bg-cover bg-center" style="background-image: url('{{ asset('images/banner/banner-background.jpg') }}');">
+                    <div class="absolute inset-0">
+                        <img src="{{ asset('images/banner/banner-background.jpg') }}" 
+                             alt="Traditional Redefined"
+                             class="w-full h-full object-cover"
+                             loading="eager" fetchpriority="high">
                         <div class="absolute inset-0 bg-black/60"></div>
                     </div>
                     <div class="relative z-10 text-center text-white px-4 max-w-4xl mx-auto mt-20" data-aos="fade-up">
                       
-                         <img src="{{ asset('images/banner/logo-text.png') }}" class="w-64 sm:w-80 md:w-96 lg:w-[32rem] xl:w-[600px] mb-6 mx-auto object-contain drop-shadow-xl" alt="Banner Content">
+                         <img src="{{ asset('images/banner/logo-text.png') }}" 
+                              class="w-64 sm:w-80 md:w-96 lg:w-[32rem] xl:w-[600px] mb-6 mx-auto object-contain drop-shadow-xl" 
+                              alt="Banner Content"
+                              width="600" height="200">
                         <h1 class="font-serif text-5xl md:text-7xl lg:text-8xl mb-6 leading-tight">
                             Tradition <span class="text-primary italic">Redefined</span>
                         </h1>

@@ -1,4 +1,4 @@
-@props(['product' => null, 'class' => ''])
+@props(['product' => null, 'class' => '', 'loading' => 'lazy'])
 
 @php
     $image = $product && $product->primary_image ? $product->primary_image : asset('images/no-image.png');
@@ -10,23 +10,28 @@
     $link = $product ? route('products.short', $product->id) : '#'; 
 @endphp
 
-<div class="group relative bg-white h-full flex flex-col {{ $class }}" x-data="{ loaded: false }">
+<div class="group relative bg-white h-full flex flex-col {{ $class }}" x-data="{ loaded: false }" x-init="if ($refs.prodImage.complete) loaded = true">
     
-    <!-- Image Skeleton -->
-    <div x-show="!loaded" class="aspect-[4/5] bg-gray-100 animate-pulse w-full relative overflow-hidden flex-shrink-0">
-         <div class="absolute inset-0 bg-gradient-to-r from-gray-100 via-gray-50 to-gray-100 shimmer"></div>
-    </div>
+    <!-- Image Wrapper -->
+    <div class="aspect-[4/5] relative overflow-hidden bg-gray-50 flex-shrink-0">
+        
+        <!-- Skeleton / Shimmer -->
+        <div x-show="!loaded" class="absolute inset-0 bg-gray-100 animate-pulse z-10">
+             <div class="absolute inset-0 bg-gradient-to-r from-gray-100 via-gray-50 to-gray-100 shimmer"></div>
+        </div>
 
-    <!-- Product Image -->
-    <div class="aspect-[4/5] relative overflow-hidden bg-gray-50 flex-shrink-0" x-show="loaded" x-cloak>
         <a href="{{ $link }}" class="block w-full h-full">
             <img src="{{ $image }}" 
                  alt="{{ $name }}" 
-                 loading="lazy"
-                 class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                 x-ref="prodImage"
+                 loading="{{ $loading }}"
+                 @if($loading === 'eager') fetchpriority="high" @endif
+                 width="400"
+                 height="500"
+                 class="w-full h-full object-cover transition-all duration-700 group-hover:scale-110"
+                 :class="{ 'opacity-0': !loaded, 'opacity-100': loaded, 'blur-sm': !loaded }"
                  @load="loaded = true"
                  x-on:error="$el.src = '{{ asset('images/no-image.png') }}'; loaded = true"
-                 :class="{ 'opacity-0': !loaded, 'opacity-100': loaded }"
             >
             <!-- Secondary Hover Image (Optional) -->
             <div class="absolute inset-0 bg-black/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>

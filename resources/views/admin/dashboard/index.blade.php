@@ -68,6 +68,9 @@
                 <a href="{{ route('admin.testimonials.create') }}" class="btn btn-app">
                     <i class="bi bi-chat-right-quote"></i> Add Testimonial
                 </a>
+                <a href="{{ route('admin.optimize-images') }}" class="btn btn-app bg-primary text-white" onclick="return confirm('Note: This will compress your home page images to improve loading speed. Continue?')">
+                    <i class="bi bi-speedometer2"></i> Optimize Home Images
+                </a>
             </div>
         </div>
     </div>
