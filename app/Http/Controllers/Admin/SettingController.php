@@ -111,13 +111,31 @@ class SettingController extends Controller
     {
          $request->validate([
             'rate_gold_24k' => 'nullable|numeric',
-            'rate_gold_22k' => 'nullable|numeric',
             'rate_silver' => 'nullable|numeric',
         ]);
 
-        Setting::set('rate_gold_24k', $request->rate_gold_24k, 'rates', 'number');
-        Setting::set('rate_gold_22k', $request->rate_gold_22k, 'rates', 'number');
-        Setting::set('rate_silver', $request->rate_silver, 'rates', 'number');
+        $gold24k = $request->rate_gold_24k;
+        $silver1kg = $request->rate_silver;
+
+        // Calculate Gold Rates
+        $gold22k = $gold24k ? round(($gold24k * 22) / 24, 2) : 0;
+        $gold18k = $gold24k ? round(($gold24k * 18) / 24, 2) : 0;
+        $gold14k = $gold24k ? round(($gold24k * 14) / 24, 2) : 0;
+
+        // Calculate Silver Rates
+        $silver100g = $silver1kg ? round($silver1kg / 10, 2) : 0;
+        $silver10g = $silver1kg ? round($silver1kg / 100, 2) : 0;
+
+        // Set Gold Rates
+        Setting::set('rate_gold_24k', $gold24k, 'rates', 'number');
+        Setting::set('rate_gold_22k', $gold22k, 'rates', 'number');
+        Setting::set('rate_gold_18k', $gold18k, 'rates', 'number');
+        Setting::set('rate_gold_14k', $gold14k, 'rates', 'number');
+
+        // Set Silver Rates
+        Setting::set('rate_silver', $silver1kg, 'rates', 'number');
+        Setting::set('rate_silver_100g', $silver100g, 'rates', 'number');
+        Setting::set('rate_silver_10g', $silver10g, 'rates', 'number');
 
         // Handle visibility toggles (checkboxes)
         Setting::set('show_gold_prices', $request->has('show_gold_prices') ? 1 : 0, 'rates', 'boolean');

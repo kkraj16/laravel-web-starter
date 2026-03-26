@@ -12,7 +12,12 @@
 
     $rateGold24k = $parsePrice('rate_gold_24k', '76500');
     $rateGold22k = $parsePrice('rate_gold_22k', '71200');
+    $rateGold18k = $parsePrice('rate_gold_18k', '58500');
+    $rateGold14k = $parsePrice('rate_gold_14k', '45500');
+
     $rateSilver = $parsePrice('rate_silver', '92500');
+    $rateSilver100g = $parsePrice('rate_silver_100g', '9250');
+    $rateSilver10g = $parsePrice('rate_silver_10g', '925');
 @endphp
 
 <style>
@@ -116,12 +121,36 @@
             <span class="ticker-value">₹{{ number_format($rateGold22k) }}</span>
         </span>
         <span class="ticker-separator">|</span>
+
+        <span class="ticker-item">
+            <span class="ticker-label">Gold 18K</span>
+            <span class="ticker-value">₹{{ number_format($rateGold18k) }}</span>
+        </span>
+        <span class="ticker-separator">|</span>
+
+        <span class="ticker-item">
+            <span class="ticker-label">Gold 14K</span>
+            <span class="ticker-value">₹{{ number_format($rateGold14k) }}</span>
+        </span>
+        <span class="ticker-separator">|</span>
         @endif
 
         @if($showSilverPrices)
         <span class="ticker-item">
-            <span class="ticker-label">Silver</span>
+            <span class="ticker-label">Silver 1kg</span>
             <span class="ticker-value">₹{{ number_format($rateSilver) }}</span>
+        </span>
+        <span class="ticker-separator">|</span>
+
+        <span class="ticker-item">
+            <span class="ticker-label">Silver 100g</span>
+            <span class="ticker-value">₹{{ number_format($rateSilver100g) }}</span>
+        </span>
+        <span class="ticker-separator">|</span>
+
+        <span class="ticker-item">
+            <span class="ticker-label">Silver 10g</span>
+            <span class="ticker-value">₹{{ number_format($rateSilver10g) }}</span>
         </span>
         <span class="ticker-separator">|</span>
         @endif
@@ -149,12 +178,36 @@
             <span class="ticker-value">₹{{ number_format($rateGold22k) }}</span>
         </span>
         <span class="ticker-separator">|</span>
+
+        <span class="ticker-item">
+            <span class="ticker-label">Gold 18K</span>
+            <span class="ticker-value">₹{{ number_format($rateGold18k) }}</span>
+        </span>
+        <span class="ticker-separator">|</span>
+
+        <span class="ticker-item">
+            <span class="ticker-label">Gold 14K</span>
+            <span class="ticker-value">₹{{ number_format($rateGold14k) }}</span>
+        </span>
+        <span class="ticker-separator">|</span>
         @endif
 
         @if($showSilverPrices)
         <span class="ticker-item">
-            <span class="ticker-label">Silver</span>
+            <span class="ticker-label">Silver 1kg</span>
             <span class="ticker-value">₹{{ number_format($rateSilver) }}</span>
+        </span>
+        <span class="ticker-separator">|</span>
+
+        <span class="ticker-item">
+            <span class="ticker-label">Silver 100g</span>
+            <span class="ticker-value">₹{{ number_format($rateSilver100g) }}</span>
+        </span>
+        <span class="ticker-separator">|</span>
+
+        <span class="ticker-item">
+            <span class="ticker-label">Silver 10g</span>
+            <span class="ticker-value">₹{{ number_format($rateSilver10g) }}</span>
         </span>
         <span class="ticker-separator">|</span>
         @endif
