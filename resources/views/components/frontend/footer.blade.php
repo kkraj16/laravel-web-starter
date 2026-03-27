@@ -5,9 +5,6 @@
             <!-- Brand Column -->
             <div class="md:col-span-1">
                 <h3 class="text-accent text-lg font-serif mb-6">{{ $siteName }} | Luxury Jewellery & Heritage</h3>
-                <p class="text-gray-400 text-sm leading-relaxed mb-6">
-                    {{ $siteTagline }}
-                </p>
                 <div class="flex space-x-4">
                     @if($contactInfo['facebook'] && $contactInfo['facebook'] !== '#')
                         <a href="{{ $contactInfo['facebook'] }}" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white transition-colors" aria-label="Facebook"><i class="bi bi-facebook"></i></a>
@@ -18,6 +15,18 @@
                     @if($contactInfo['twitter'] && $contactInfo['twitter'] !== '#')
                         <a href="{{ $contactInfo['twitter'] }}" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white transition-colors" aria-label="Twitter"><i class="bi bi-twitter-x"></i></a>
                     @endif
+                </div>
+
+                <!-- Certification -->
+                <div class="pt-6 border-t border-gray-800">
+                    <p class="text-[10px] uppercase tracking-[0.2em] text-gray-500 mb-4 font-bold tracking-widest">Authenticity Guaranteed</p>
+                    <div class="flex items-center space-x-4">
+                        <img src="{{ asset('images/system/bis-hallmark.png') }}" alt="BIS Hallmark" class="h-12 w-auto opacity-80 hover:opacity-100 transition-opacity" title="BIS Hallmarked Jewellery">
+                        <div class="text-[9px] text-gray-400 leading-tight uppercase tracking-widest">
+                            <span class="block font-bold text-white mb-1">BIS Hallmarked</span>
+                            <span>100% Certified Gold & Silver</span>
+                        </div>
+                    </div>
                 </div>
             </div>
 
