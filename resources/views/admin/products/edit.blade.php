@@ -187,7 +187,9 @@
                                 @php $selectedCategories = $product->categories->pluck('id')->toArray(); @endphp
                                 <select name="categories[]" id="categorySelect" class="form-select" multiple required size="8" style="height: auto;">
                                     @foreach($categories as $cat)
-                                        <option value="{{ $cat->id }}" {{ in_array($cat->id, $selectedCategories) ? 'selected' : '' }}>{{ $cat->name }}</option>
+                                        <option value="{{ $cat->id }}" {{ $cat->children->isNotEmpty() ? 'disabled' : '' }} class="{{ $cat->children->isNotEmpty() ? 'fw-bold text-dark' : '' }}" {{ in_array($cat->id, $selectedCategories) ? 'selected' : '' }}>
+                                            {{ $cat->name }} {{ $cat->children->isNotEmpty() ? '(Parent)' : '' }}
+                                        </option>
                                         @foreach($cat->children as $child)
                                             <option value="{{ $child->id }}" {{ in_array($child->id, $selectedCategories) ? 'selected' : '' }}>&nbsp;&nbsp;└─ {{ $child->name }}</option>
                                         @endforeach

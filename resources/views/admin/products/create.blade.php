@@ -149,7 +149,9 @@
                                 <label class="form-label fw-bold">Categories <span class="text-danger">*</span></label>
                                 <select name="categories[]" id="categorySelect" class="form-select" multiple required size="8" style="height: auto;">
                                     @foreach($categories as $cat)
-                                        <option value="{{ $cat->id }}">{{ $cat->name }}</option>
+                                        <option value="{{ $cat->id }}" {{ $cat->children->isNotEmpty() ? 'disabled' : '' }} class="{{ $cat->children->isNotEmpty() ? 'fw-bold text-dark' : '' }}">
+                                            {{ $cat->name }} {{ $cat->children->isNotEmpty() ? '(Parent)' : '' }}
+                                        </option>
                                         @foreach($cat->children as $child)
                                             <option value="{{ $child->id }}">&nbsp;&nbsp;└─ {{ $child->name }}</option>
                                         @endforeach

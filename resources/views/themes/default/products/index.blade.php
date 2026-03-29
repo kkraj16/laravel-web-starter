@@ -37,19 +37,49 @@
 
                         <!-- Categories Filter -->
                         <div>
-                            <h4 class="font-serif text-lg mb-4 text-gray-900">Categories</h4>
-                            <div class="space-y-2">
-                                @foreach($categories as $category)
-                                    <button
-                                        @click="if(filters.categories.includes({{ $category->id }})) { filters.categories = filters.categories.filter(id => id !== {{ $category->id }}) } else { filters.categories.push({{ $category->id }}) }; updateFilters()"
-                                        :class="filters.categories.includes({{ $category->id }}) ? 'bg-primary text-white font-bold' : 'bg-gray-50 text-gray-700 hover:bg-primary hover:text-white'"
-                                        class="w-full text-left px-4 py-2 text-sm rounded transition-colors"
-                                    >
-                                        {{ $category->name }}
-                                        @if($category->products_count > 0)
-                                            <span class="text-xs opacity-70">({{ $category->products_count }})</span>
+                            <h4 class="font-serif text-lg mb-4 text-gray-900 border-b border-gray-100 pb-2">Categories</h4>
+                            <div class="space-y-6">
+                                @foreach($categories as $parent)
+                                    <div>
+                                        <!-- Parent Header -->
+                                        @if($parent->children->isNotEmpty())
+                                            <div class="flex items-center justify-between mb-2">
+                                                <span class="text-xs font-bold uppercase tracking-widest text-gray-400">
+                                                    {{ $parent->name }}
+                                                </span>
+                                                @if($parent->products_count > 0)
+                                                    <span class="text-[10px] text-gray-300">({{ $parent->products_count }})</span>
+                                                @endif
+                                            </div>
+                                        @else
+                                            <div class="flex items-center justify-between mb-2 group cursor-pointer" 
+                                                 @click="if(filters.categories.includes({{ $parent->id }})) { filters.categories = filters.categories.filter(id => id !== {{ $parent->id }}) } else { filters.categories.push({{ $parent->id }}) }; updateFilters()">
+                                                <span class="text-xs font-bold uppercase tracking-widest transition-colors"
+                                                      :class="filters.categories.includes({{ $parent->id }}) ? 'text-primary' : 'text-gray-500 group-hover:text-primary'">
+                                                    {{ $parent->name }}
+                                                </span>
+                                                @if($parent->products_count > 0)
+                                                    <span class="text-[10px] text-gray-400">({{ $parent->products_count }})</span>
+                                                @endif
+                                            </div>
                                         @endif
-                                    </button>
+                                        
+                                        <!-- Children List -->
+                                        <div class="space-y-1.5 pl-2 border-l-2 border-gray-50 flex flex-col">
+                                            @foreach($parent->children as $category)
+                                                <button
+                                                    @click="if(filters.categories.includes({{ $category->id }})) { filters.categories = filters.categories.filter(id => id !== {{ $category->id }}) } else { filters.categories.push({{ $category->id }}) }; updateFilters()"
+                                                    :class="filters.categories.includes({{ $category->id }}) ? 'bg-primary text-white font-bold shadow-md scale-[1.02]' : 'bg-gray-50 text-gray-600 hover:bg-primary/10 hover:text-primary border-transparent'"
+                                                    class="w-full text-left px-4 py-2 text-[13px] rounded transition-all duration-200 flex justify-between items-center transform cursor-pointer"
+                                                >
+                                                    {{ $category->name }}
+                                                    @if($category->products_count > 0)
+                                                        <span class="text-[10px] opacity-70">({{ $category->products_count }})</span>
+                                                    @endif
+                                                </button>
+                                            @endforeach
+                                        </div>
+                                    </div>
                                 @endforeach
                             </div>
                         </div>

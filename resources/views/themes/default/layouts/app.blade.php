@@ -26,6 +26,8 @@
     <meta property="twitter:description" content="{{ $seo->og_description ?? ($seo->meta_description ?? '') }}">
     <meta property="twitter:image" content="{{ $seo->og_image ? asset($seo->og_image) : asset('uploads/system/logo.png') }}">
     @endif
+    <!-- Alpine.js Plugins -->
+    <script defer src="https://cdn.jsdelivr.net/npm/@alpinejs/collapse@3.x.x/dist/cdn.min.js"></script>
     <!-- Alpine.js -->
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.13.3/dist/cdn.min.js"></script>
 

@@ -31,8 +31,10 @@ class ProductController extends Controller
             });
         } elseif ($request->has('categories') && is_array($request->categories)) {
             // Multiple categories by IDs (from filter sidebar)
-            $query->whereHas('categories', function($q) use ($request) {
-                $q->whereIn('categories.id', $request->categories);
+            $categoryIds = $request->categories;
+            $query->whereHas('categories', function($q) use ($categoryIds) {
+                $q->whereIn('categories.id', $categoryIds)
+                  ->orWhereIn('categories.parent_id', $categoryIds);
             });
         }
 
@@ -92,7 +94,17 @@ class ProductController extends Controller
         }
 
         $products = $query->paginate(12)->withQueryString();
-        $categories = Category::withCount('products')->get();
+        
+        $categories = Category::whereNull('parent_id')
+            ->where('is_active', true)
+            ->with(['children' => function($q) {
+                $q->where('is_active', true)
+                  ->withCount('products')
+                  ->orderBy('position', 'asc');
+            }])
+            ->withCount('products')
+            ->orderBy('position', 'asc')
+            ->get();
         
         $minPrice = Product::min('price') ?? 0;
         $maxPrice = Product::max('price') ?? 10000;
