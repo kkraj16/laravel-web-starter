@@ -71,6 +71,9 @@
                 <a href="{{ route('admin.optimize-images') }}" class="btn btn-app bg-primary text-white" onclick="return confirm('Note: This will compress your home page images to improve loading speed. Continue?')">
                     <i class="bi bi-speedometer2"></i> Optimize Home Images
                 </a>
+                <a href="{{ route('admin.clear-cache') }}" class="btn btn-app bg-danger text-white" onclick="return confirm('This will clear all application cache and configurations. Are you sure?')">
+                    <i class="bi bi-trash"></i> Reset Cache
+                </a>
             </div>
         </div>
     </div>

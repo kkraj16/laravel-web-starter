@@ -97,4 +97,18 @@ class DashboardController extends Controller
             $messages[] = "Error optimizing " . basename($path) . ": " . $e->getMessage();
         }
     }
+
+    public function clearCache()
+    {
+        try {
+            \Illuminate\Support\Facades\Artisan::call('cache:clear');
+            \Illuminate\Support\Facades\Artisan::call('view:clear');
+            \Illuminate\Support\Facades\Artisan::call('config:clear');
+            \Illuminate\Support\Facades\Artisan::call('route:clear');
+            
+            return back()->with('success', 'Application cache and configurations cleared successfully!');
+        } catch (\Exception $e) {
+            return back()->with('error', 'Error clearing cache: ' . $e->getMessage());
+        }
+    }
 }
