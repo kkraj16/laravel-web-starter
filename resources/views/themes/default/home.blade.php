@@ -3,7 +3,7 @@
 @section('content')
 
     <!-- Hero Section -->
-    <x-frontend.hero :banners="$banners" />
+    <x-frontend.hero :banners="$banners" :showStaticDefault="$showStaticDefault" />
 
     <!-- Trending Masterpieces -->
     <section class="py-24 bg-gray-50">

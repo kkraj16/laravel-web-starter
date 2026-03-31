@@ -18,12 +18,13 @@ Route::post('password/reset', [App\Http\Controllers\Auth\ResetPasswordController
 Route::get('/', function () {
     $cacheTtl = 3600; // 1 hour
 
-    $banners = \Illuminate\Support\Facades\Cache::remember('home_banners', $cacheTtl, function () {
+    $banners = \Illuminate\Support\Facades\Cache::remember('home_banners_v4', $cacheTtl, function () {
         return \App\Models\Banner::where('is_active', true)
             ->orderBy('sort_order', 'asc')
-            ->orderBy('created_at', 'desc')
             ->get();
     });
+
+    $showStaticDefault = \App\Models\Setting::get('show_static_default_banner', 1);
 
     $products = \Illuminate\Support\Facades\Cache::remember('home_trending_products', $cacheTtl, function () {
         return \App\Models\Product::with('categories')
@@ -41,7 +42,7 @@ Route::get('/', function () {
             ->get();
     });
     
-    return view('theme::home', compact('products', 'testimonials', 'banners'));
+    return view('theme::home', compact('products', 'testimonials', 'banners', 'showStaticDefault'));
 })->name('home');
 
 Route::get('/collections', [\App\Http\Controllers\Frontend\ProductController::class, 'index'])->name('products.index');

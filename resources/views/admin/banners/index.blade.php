@@ -6,7 +6,16 @@
 <div class="card card-outline card-primary">
     <div class="card-header">
         <h3 class="card-title">Manage Banners</h3>
-        <div class="card-tools">
+        <div class="card-tools d-flex align-items-center gap-3">
+            <form action="{{ route('admin.settings.update') }}" method="POST" class="d-inline-flex align-items-center gap-2 me-2 border-end pe-2">
+                @csrf
+                @php $showStaticDefault = \App\Models\Setting::get('show_static_default_banner', 1); @endphp
+                <input type="hidden" name="show_static_default_banner" value="0">
+                <div class="form-check form-switch mb-0">
+                    <input class="form-check-input" style="height: 1.1em; width: 2em;" type="checkbox" name="show_static_default_banner" value="1" id="staticDefaultToggle" onchange="this.closest('form').submit()" {{ $showStaticDefault ? 'checked' : '' }}>
+                    <label class="form-check-label small fw-bold" for="staticDefaultToggle" style="font-size: 0.75rem;">Show Static Default</label>
+                </div>
+            </form>
             <a href="{{ route('admin.banners.create') }}" class="btn btn-primary btn-sm">
                 <i class="bi bi-plus-lg"></i> Add New Banner
             </a>
@@ -30,7 +39,7 @@
                 <tr>
                     <td class="align-middle">{{ $loop->iteration }}</td>
                     <td class="align-middle">
-                        <img src="{{ $banner->image_path }}" class="img-thumbnail" style="height: 60px; width: 100px; object-fit: cover;">
+                        <img src="{{ asset($banner->image_path) }}" class="img-thumbnail" style="height: 60px; width: 100px; object-fit: cover;">
                     </td>
                     <td class="align-middle">
                         <div class="fw-bold">{{ $banner->title ?? 'No Title' }}</div>

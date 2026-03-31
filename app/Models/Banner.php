@@ -11,8 +11,8 @@ class Banner extends Model
     
     protected static function booted()
     {
-        static::saved(fn () => \Illuminate\Support\Facades\Cache::forget('home_banners'));
-        static::deleted(fn () => \Illuminate\Support\Facades\Cache::forget('home_banners'));
+        static::saved(fn () => \Illuminate\Support\Facades\Cache::forget('home_banners_v4'));
+        static::deleted(fn () => \Illuminate\Support\Facades\Cache::forget('home_banners_v4'));
     }
 
     protected $fillable = [
@@ -46,5 +46,29 @@ class Banner extends Model
     {
         // Heuristic: If opacity is the old default (0.6), treat it as 0.2
         return ($this->overlay_opacity == 0.6) ? 0.2 : $this->overlay_opacity;
+    }
+
+    public function getImagePathAttribute($value)
+    {
+        if (!$value) return null;
+        $clean = ltrim($value, '/');
+        if (str_starts_with($clean, 'http') || str_starts_with($clean, 'images/')) return $clean;
+        return str_starts_with($clean, 'storage/') ? $clean : 'storage/' . $clean;
+    }
+
+    public function getMobileImagePathAttribute($value)
+    {
+        if (!$value) return null;
+        $clean = ltrim($value, '/');
+        if (str_starts_with($clean, 'http') || str_starts_with($clean, 'images/')) return $clean;
+        return str_starts_with($clean, 'storage/') ? $clean : 'storage/' . $clean;
+    }
+
+    public function getContentImagePathAttribute($value)
+    {
+        if (!$value) return null;
+        $clean = ltrim($value, '/');
+        if (str_starts_with($clean, 'http') || str_starts_with($clean, 'images/')) return $clean;
+        return str_starts_with($clean, 'storage/') ? $clean : 'storage/' . $clean;
     }
 }

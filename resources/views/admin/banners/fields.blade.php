@@ -6,7 +6,7 @@
         <div class="form-text">Recommended size: 1920x800px or higher.</div>
         @if(isset($banner) && $banner->image_path)
             <div class="mt-2">
-                <img src="{{ $banner->image_path }}" class="img-thumbnail" style="max-height: 100px;">
+                <img src="{{ asset($banner->image_path) }}" class="img-thumbnail" style="max-height: 100px;">
             </div>
         @endif
         @error('image_path') <div class="text-danger small">{{ $message }}</div> @enderror
@@ -19,7 +19,7 @@
         <div class="form-text">Recommended size: 800x1000px (Portrait).</div>
         @if(isset($banner) && $banner->mobile_image_path)
             <div class="mt-2">
-                <img src="{{ $banner->mobile_image_path }}" class="img-thumbnail" style="max-height: 100px;">
+                <img src="{{ asset($banner->mobile_image_path) }}" class="img-thumbnail" style="max-height: 100px;">
             </div>
         @endif
         @error('mobile_image_path') <div class="text-danger small">{{ $message }}</div> @enderror
@@ -33,7 +33,7 @@
         <div class="form-text">Transparent PNG recommended. Appears in foreground.</div>
         @if(isset($banner) && $banner->content_image_path)
             <div class="mt-2 p-2 bg-dark rounded d-inline-block">
-                <img src="{{ $banner->content_image_path }}" class="img-thumbnail bg-transparent border-0" style="max-height: 100px;">
+                <img src="{{ asset($banner->content_image_path) }}" class="img-thumbnail bg-transparent border-0" style="max-height: 100px;">
             </div>
         @endif
         @error('content_image_path') <div class="text-danger small">{{ $message }}</div> @enderror
