@@ -44,7 +44,7 @@
                                         <!-- Parent Header -->
                                         @if($parent->children->isNotEmpty())
                                             <div class="flex items-center justify-between mb-2">
-                                                <span class="text-xs font-bold uppercase tracking-widest text-gray-400">
+                                                <span class="text-[12px] font-black uppercase tracking-[0.2em] text-black bg-gray-200/80 px-2 py-1.5 rounded-sm border-l-4 border-primary block w-full shadow-sm">
                                                     {{ $parent->name }}
                                                 </span>
                                                 @if($parent->products_count > 0)
@@ -54,8 +54,8 @@
                                         @else
                                             <div class="flex items-center justify-between mb-2 group cursor-pointer" 
                                                  @click="if(filters.categories.includes({{ $parent->id }})) { filters.categories = filters.categories.filter(id => id !== {{ $parent->id }}) } else { filters.categories.push({{ $parent->id }}) }; updateFilters()">
-                                                <span class="text-xs font-bold uppercase tracking-widest transition-colors"
-                                                      :class="filters.categories.includes({{ $parent->id }}) ? 'text-primary' : 'text-gray-500 group-hover:text-primary'">
+                                                <span class="text-[12px] font-black uppercase tracking-[0.2em] transition-colors bg-gray-200/80 px-2 py-1.5 rounded-sm border-l-4 shadow-sm"
+                                                      :class="filters.categories.includes({{ $parent->id }}) ? 'text-primary border-primary' : 'text-black border-transparent group-hover:text-primary'">
                                                     {{ $parent->name }}
                                                 </span>
                                                 @if($parent->products_count > 0)

@@ -97,7 +97,7 @@
     }
 </style>
 
-<div class="ticker-container">
+<div class="ticker-container" data-nosnippet>
     <!-- Fixed Live Market Badge -->
     <div class="ticker-badge">
         <span class="text-primary font-bold flex items-center text-[10px] uppercase tracking-widest">
