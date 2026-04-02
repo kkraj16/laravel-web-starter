@@ -4,47 +4,48 @@
         @foreach($products as $product)
             <div class="group relative">
                 <div class="aspect-[4/5] bg-gray-100 overflow-hidden relative mb-4">
-                    @if($product->gallery && count($product->gallery) > 0)
-                        <img 
-                            src="{{ asset('storage/' . $product->gallery[0]) }}" 
-                            alt="{{ $product->name }}" 
-                            class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                        >
-                        @if(isset($product->gallery[1]))
+                    <a href="{{ route('products.show', $product->slug) }}" class="block w-full h-full">
+                        @if($product->gallery && count($product->gallery) > 0)
                             <img 
-                                src="{{ asset('storage/' . $product->gallery[1]) }}" 
+                                src="{{ asset('storage/' . $product->gallery[0]) }}" 
                                 alt="{{ $product->name }}" 
-                                class="absolute inset-0 w-full h-full object-cover opacity-0 group-hover:opacity-100 transition-opacity duration-700"
+                                class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                             >
+                            @if(isset($product->gallery[1]))
+                                <img 
+                                    src="{{ asset('storage/' . $product->gallery[1]) }}" 
+                                    alt="{{ $product->name }}" 
+                                    class="absolute inset-0 w-full h-full object-cover opacity-0 group-hover:opacity-100 transition-opacity duration-700"
+                                >
+                            @endif
+                        @elseif($product->thumbnail)
+                            <img 
+                                src="{{ asset('storage/' . $product->thumbnail) }}" 
+                                alt="{{ $product->name }}" 
+                                class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                            >
+                        @elseif($product->primary_image)
+                            <img 
+                                src="{{ $product->primary_image }}" 
+                                alt="{{ $product->name }}" 
+                                class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                            >
+                        @else
+                            <div class="w-full h-full flex items-center justify-center bg-gray-50 text-gray-300">
+                                <i class="bi bi-card-image text-4xl"></i>
+                            </div>
                         @endif
-                    @elseif($product->thumbnail)
-                        <img 
-                            src="{{ asset('storage/' . $product->thumbnail) }}" 
-                            alt="{{ $product->name }}" 
-                            class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                        >
-                    @elseif($product->primary_image)
-                        <img 
-                            src="{{ $product->primary_image }}" 
-                            alt="{{ $product->name }}" 
-                            class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                        >
-                    @else
-                        <div class="w-full h-full flex items-center justify-center bg-gray-50 text-gray-300">
-                            <i class="bi bi-card-image text-4xl"></i>
-                        </div>
-                    @endif
 
+                        @if($product->created_at->diffInDays(now()) < 30)
+                            <span class="absolute top-2 left-2 bg-black text-white text-[10px] uppercase font-bold tracking-widest px-2 py-1">New</span>
+                        @endif
 
-                    @if($product->created_at->diffInDays(now()) < 30)
-                        <span class="absolute top-2 left-2 bg-black text-white text-[10px] uppercase font-bold tracking-widest px-2 py-1">New</span>
-                    @endif
-
-                    @if($product->stock_status == 'outofstock')
-                        <div class="absolute inset-0 bg-white/60 flex items-center justify-center">
-                            <span class="bg-red-500 text-white px-3 py-1 text-xs uppercase tracking-widest font-bold shadow-md">Out of Stock</span>
-                        </div>
-                    @endif
+                        @if($product->stock_status == 'outofstock')
+                            <div class="absolute inset-0 bg-white/60 flex items-center justify-center">
+                                <span class="bg-red-500 text-white px-3 py-1 text-xs uppercase tracking-widest font-bold shadow-md">Out of Stock</span>
+                            </div>
+                        @endif
+                    </a>
 
                     <div class="absolute bottom-4 left-0 right-0 px-4 translate-y-full opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300">
                         @if($product->stock_status == 'outofstock')
