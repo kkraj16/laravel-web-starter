@@ -21,6 +21,15 @@ class ProductController extends Controller
                   ->orWhere('description', 'like', "%{$search}%")
                   ->orWhere('short_description', 'like', "%{$search}%");
             });
+
+            // Priority Sort: If searching, show exact prefix matches first, then suffix, then general contains
+            // This applies when no special sort (like price) is chosen, or as a secondary sort
+            $query->orderByRaw("CASE 
+                WHEN name LIKE ? THEN 1 
+                WHEN name LIKE ? THEN 2 
+                WHEN name LIKE ? THEN 3 
+                ELSE 4 
+                END", ["{$search}%", "%{$search}", "%{$search}%"]);
         }
 
         // Filter by Category (supports both slug and ID array)
